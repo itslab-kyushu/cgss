@@ -1,0 +1,2 @@
+PRIME_LENGTH:2818
+The time of gererate of prime:21.768s
