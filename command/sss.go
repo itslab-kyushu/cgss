@@ -17,7 +17,7 @@ type Share struct {
 // Distribute computes shares having a given secret.
 func Distribute(secret []byte, chankByte, size, threshold int) (shares []Share, err error) {
 
-	prime, err := rand.Prime(rand.Reader, chankByte*8)
+	prime, err := rand.Prime(rand.Reader, chankByte*8+1)
 	if err != nil {
 		return
 	}
