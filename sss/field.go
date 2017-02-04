@@ -1,4 +1,4 @@
-package command
+package sss
 
 import "math/big"
 
@@ -19,3 +19,5 @@ func NewField(prime *big.Int) *Field {
 	}
 
 }
+
+// TODO: Implementn marshaler/unmarshaler to only save Prime attribute.
