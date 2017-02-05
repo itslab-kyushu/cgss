@@ -1,5 +1,6 @@
 # cgss
 [![GPLv3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/copyleft/gpl.html)
+
 Cross-Group Secret Sharing.
 
 This software implements the Cross-Group Secret Sharing scheme proposed in [Cross-group Secret Sharing for Secure Cloud Storage Service](http://hdl.handle.net/2324/1563374).

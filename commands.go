@@ -21,8 +21,8 @@ var Commands = []cli.Command{
 		Action:      command.CmdDistribute,
 		Flags: []cli.Flag{
 			cli.IntFlag{
-				Name:  "chank",
-				Usage: "Byte `size` of eash chank.",
+				Name:  "chunk",
+				Usage: "Byte `size` of eash chunk.",
 				Value: 256,
 			},
 		},

@@ -15,15 +15,15 @@ type Share struct {
 }
 
 // Distribute computes shares having a given secret.
-func Distribute(secret []byte, chankByte, size, threshold int) (shares []Share, err error) {
+func Distribute(secret []byte, chunkByte, size, threshold int) (shares []Share, err error) {
 
-	prime, err := rand.Prime(rand.Reader, chankByte*8+1)
+	prime, err := rand.Prime(rand.Reader, chunkByte*8+1)
 	if err != nil {
 		return
 	}
 	field := NewField(prime)
 
-	nvalue := int(math.Ceil(float64(len(secret)) / float64(chankByte)))
+	nvalue := int(math.Ceil(float64(len(secret)) / float64(chunkByte)))
 	shares = make([]Share, size)
 	for i := range shares {
 		key := big.NewInt(int64(i + 1))
@@ -35,10 +35,10 @@ func Distribute(secret []byte, chankByte, size, threshold int) (shares []Share, 
 	}
 
 	var value *big.Int
-	for chank := 0; chank < nvalue; chank++ {
-		if len(secret) > chankByte {
-			value = new(big.Int).SetBytes(secret[:chankByte])
-			secret = secret[chankByte:]
+	for chunk := 0; chunk < nvalue; chunk++ {
+		if len(secret) > chunkByte {
+			value = new(big.Int).SetBytes(secret[:chunkByte])
+			secret = secret[chunkByte:]
 		} else {
 			value = new(big.Int).SetBytes(secret)
 			secret = nil
@@ -51,7 +51,7 @@ func Distribute(secret []byte, chankByte, size, threshold int) (shares []Share, 
 
 		for i := range shares {
 			key := big.NewInt(int64(i + 1))
-			shares[i].Value[chank] = polynomial.Call(key)
+			shares[i].Value[chunk] = polynomial.Call(key)
 		}
 
 	}
@@ -68,12 +68,12 @@ func Reconstruct(shares []Share) (bytes []byte, err error) {
 	}
 
 	bytes = []byte{}
-	for chank := 0; chank < len(shares[0].Value); chank++ {
+	for chunk := 0; chunk < len(shares[0].Value); chunk++ {
 
 		value := big.NewInt(0)
 		field := shares[0].Field
 		for i, s := range shares {
-			value.Add(value, new(big.Int).Mul(s.Value[chank], beta(field, shares, i)))
+			value.Add(value, new(big.Int).Mul(s.Value[chunk], beta(field, shares, i)))
 		}
 		value.Mod(value, field.Prime)
 

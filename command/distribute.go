@@ -12,7 +12,7 @@ import (
 
 type distributeOpt struct {
 	Filename  string
-	ChankSize int
+	ChunkSize int
 	Size      int
 	Threshold int
 }
@@ -35,7 +35,7 @@ func CmdDistribute(c *cli.Context) (err error) {
 
 	return cmdDistribute(&distributeOpt{
 		Filename:  c.Args().Get(0),
-		ChankSize: c.Int("chank"),
+		ChunkSize: c.Int("chunk"),
 		Size:      size,
 		Threshold: threshold,
 	})
@@ -48,7 +48,7 @@ func cmdDistribute(opt *distributeOpt) (err error) {
 		return
 	}
 
-	shares, err := sss.Distribute(secret, opt.ChankSize, opt.Size, opt.Threshold)
+	shares, err := sss.Distribute(secret, opt.ChunkSize, opt.Size, opt.Threshold)
 	if err != nil {
 		return
 	}
