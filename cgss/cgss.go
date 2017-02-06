@@ -32,8 +32,21 @@ import (
 
 // Share defines a share of the Cross-Group Secret Sharing scheme.
 type Share struct {
-	GroupShare sss.Share
+	GroupShare []sss.Share
 	DataShare  sss.Share
+}
+
+// GroupKey returns the group key of the share.
+func (s *Share) GroupKey() *big.Int {
+	if len(s.GroupShare) == 0 {
+		return nil
+	}
+	return s.GroupShare[0].Key
+}
+
+// DataKey returns the data key of the share.
+func (s *Share) DataKey() *big.Int {
+	return s.DataShare.Key
 }
 
 // Distribute computes shares having a given secret.
@@ -83,7 +96,7 @@ func Distribute(secret []byte, chunksize int, allocation Allocation, gthreshold,
 		c := new(big.Int).Add(value, nu)
 
 		// Create shares for the reconstructor's secret.
-		rshares, err := sss.Distribute(nu.Bytes(), chunksize+2, allocation.Size(), gthreshold)
+		rshares, err := sss.Distribute(nu.Bytes(), chunksize, allocation.Size(), gthreshold)
 		if err != nil {
 			return nil, err
 		}
@@ -102,16 +115,7 @@ func Distribute(secret []byte, chunksize int, allocation Allocation, gthreshold,
 			if !ok {
 				return nil, fmt.Errorf("Allocation is not enough: %v", allocation)
 			}
-			if shares[i].GroupShare.Key == nil {
-				shares[i].GroupShare.Field = rshares[group].Field
-				shares[i].GroupShare.Key = big.NewInt(int64(group) + 1)
-				shares[i].GroupShare.Value = make([]*big.Int, nchunk)
-			}
-			if len(rshares[group].Value) != 1 {
-				return nil, fmt.Errorf("Length of group share for a chunk is wrong: %v", rshares)
-			}
-			shares[i].GroupShare.Value[chunk] = rshares[group].Value[0]
-
+			shares[i].GroupShare = append(shares[i].GroupShare, rshares[group])
 		}
 
 	}
@@ -138,13 +142,16 @@ func Reconstruct(shares []Share) (bytes []byte, err error) {
 		}
 		value.Mod(value, field.Prime)
 
-		gshares := distinctGroupShares(shares, chunk)
+		gshares, err := distinctGroupShares(shares, chunk)
+		if err != nil {
+			return nil, err
+		}
 		nu, err := sss.Reconstruct(gshares)
 		if err != nil {
 			return nil, err
 		}
 		value.Sub(value, new(big.Int).SetBytes(nu))
-
+		value.Mod(value, field.Prime)
 		bytes = append(bytes, value.Bytes()...)
 
 	}
@@ -161,8 +168,8 @@ func beta(field *sss.Field, shares []Share, t int) *big.Int {
 		if i == t {
 			continue
 		}
-		sub := new(big.Int).Mod(new(big.Int).Sub(s.DataShare.Key, shares[t].DataShare.Key), field.Prime)
-		v := new(big.Int).Mul(s.DataShare.Key, new(big.Int).ModInverse(sub, field.Prime))
+		sub := new(big.Int).Mod(new(big.Int).Sub(s.DataKey(), shares[t].DataKey()), field.Prime)
+		v := new(big.Int).Mul(s.DataKey(), new(big.Int).ModInverse(sub, field.Prime))
 		res.Mul(res, v)
 		res.Mod(res, field.Prime)
 	}
@@ -172,22 +179,24 @@ func beta(field *sss.Field, shares []Share, t int) *big.Int {
 }
 
 // distinctGroupShares returns a set of distinct group shares.
-func distinctGroupShares(shares []Share, index int) (res []sss.Share) {
+func distinctGroupShares(shares []Share, index int) (res []sss.Share, err error) {
 
 	set := map[string]sss.Share{}
 	for _, s := range shares {
-		key := s.GroupShare.Key.Text(16)
+		if len(s.GroupShare) < index {
+			return nil, fmt.Errorf("Group shares are broken")
+		}
+
+		key := s.GroupKey().Text(16)
 		if _, exist := set[key]; !exist {
-			set[key] = s.GroupShare
+			set[key] = s.GroupShare[index]
 		}
 	}
 
 	res = make([]sss.Share, len(set))
 	i := 0
 	for _, v := range set {
-		res[i].Field = v.Field
-		res[i].Key = v.Key
-		res[i].Value = []*big.Int{v.Value[index]}
+		res[i] = v
 		i++
 	}
 

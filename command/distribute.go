@@ -102,14 +102,15 @@ func cmdDistribute(opt *distributeOpt) (err error) {
 	}
 
 	for _, s := range shares {
+		// TODO: do parallel
 
 		data, err := json.Marshal(s)
 		if err != nil {
 			return err
 		}
 
-		g := s.GroupShare.Key.Text(16)
-		d := s.DataShare.Key.Text(16)
+		g := s.GroupKey().Text(16)
+		d := s.DataKey().Text(16)
 		filename := fmt.Sprintf("%s.%s.%s.json", opt.Filename, g, d)
 		if err = ioutil.WriteFile(filename, data, 0644); err != nil {
 			return err

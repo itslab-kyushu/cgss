@@ -26,12 +26,10 @@ type Allocation []int
 
 // Sum returns the summation of this allocate values.
 func (a Allocation) Sum() (res int) {
-
 	for _, v := range a {
 		res += v
 	}
 	return
-
 }
 
 // Size retunrs the size of allocated regions.

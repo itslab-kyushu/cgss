@@ -30,7 +30,8 @@ import (
 
 func TestCGSS(t *testing.T) {
 
-	secret := []byte("abcdefg")
+	secret := []byte(`abcdefgaerogih:weori:ih:opih:oeijhg@roeinv;dlkjh:
+		roihg:3pw9bdlnbmxznd:lah:orsihg:operinbk:sldfj:aporinb`)
 	chunksize := 8
 
 	allocation := Allocation{2, 2, 2}
@@ -48,7 +49,7 @@ func TestCGSS(t *testing.T) {
 		t.Error(err.Error())
 	}
 	if string(secret) != string(res) {
-		t.Error("Reconstructed secret is wrong:", string(res))
+		t.Error("Reconstructed secret is wrong")
 	}
 
 }
@@ -78,7 +79,13 @@ func TestMarshall(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if !cmpShare(shares[0].DataShare, res.DataShare) || !cmpShare(shares[0].GroupShare, res.GroupShare) {
+	for i, v := range shares[0].GroupShare {
+		if !cmpShare(v, res.GroupShare[i]) {
+			t.Error("Marshal/Unmarshal don't work as expected:", res)
+		}
+	}
+
+	if !cmpShare(shares[0].DataShare, res.DataShare) {
 		t.Error("Marshal/Unmarshal don't work as expected:", res)
 	}
 
