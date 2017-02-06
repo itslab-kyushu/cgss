@@ -1,27 +1,27 @@
-package command
+package simple
 
 import "testing"
 
 func TestOutputName(t *testing.T) {
 
 	var res string
-	if res = outputFile("simple.2.F.json"); res != "simple" {
+	if res = outputFile("simple.2.json"); res != "simple" {
 		t.Error("Returned filename is wrong:", res)
 	}
 
-	if res = outputFile("simple.dat.3.B.json"); res != "simple.dat" {
+	if res = outputFile("simple.dat.3.json"); res != "simple.dat" {
 		t.Error("Returned filename is wrong:", res)
 	}
 
-	if res = outputFile(".hidden.2.1.json"); res != ".hidden" {
+	if res = outputFile(".hidden.13.json"); res != ".hidden" {
 		t.Error("Returned filename is wrong:", res)
 	}
 
-	if res = outputFile("./complex/case.3.4.json"); res != "./complex/case" {
+	if res = outputFile("./complex/case.13.json"); res != "./complex/case" {
 		t.Error("Returned filename is wrong:", res)
 	}
 
-	if res = outputFile("dir/complex/case.dat.D.F.json"); res != "dir/complex/case.dat" {
+	if res = outputFile("dir/complex/case.dat.13.json"); res != "dir/complex/case.dat" {
 		t.Error("Returned filename is wrong:", res)
 	}
 

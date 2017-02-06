@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/itslab-kyushu/cgss/command"
+	"github.com/itslab-kyushu/cgss/command/simple"
 	"github.com/urfave/cli"
 )
 
@@ -12,11 +13,11 @@ import (
 var GlobalFlags = []cli.Flag{}
 
 // Commands defines a set of commands.
-var Commands = []cli.Command{
+var Commands = cli.Commands{
 	{
 		Name:        "distribute",
-		Usage:       "Distribute a file",
-		ArgsUsage:   "<file> <share size> <threshold>",
+		Usage:       "Distribute a file by Cross-Group Secret Sharing scheme",
+		ArgsUsage:   "<file> <group threshold> <data threshold> <allocation>",
 		Description: "distribute command makes a set of shares of a given file.",
 		Action:      command.CmdDistribute,
 		Flags: []cli.Flag{
@@ -29,7 +30,7 @@ var Commands = []cli.Command{
 	},
 	{
 		Name:        "reconstruct",
-		Usage:       "Reconstruct a file from a set of secrets",
+		Usage:       "Reconstruct a file from secrets by Cross-Group Secret Sharing scheme",
 		ArgsUsage:   "<file>...",
 		Description: "reconstruct command reconstructs a file from a given set of shares.",
 		Action:      command.CmdReconstruct,
@@ -37,6 +38,40 @@ var Commands = []cli.Command{
 			cli.StringFlag{
 				Name:  "output",
 				Usage: "Store the reconstructed secret to the `FILE`.",
+			},
+		},
+	},
+	{
+		Name:  "simple",
+		Usage: "Run Shamir's Secret Sharing scheme",
+		// Desctiprion: "",
+		Subcommands: cli.Commands{
+			{
+				Name:        "distribute",
+				Usage:       "Distribute a file",
+				ArgsUsage:   "<file> <threshold> <share size>",
+				Description: "distribute command makes a set of shares of a given file.",
+				Action:      simple.CmdDistribute,
+				Flags: []cli.Flag{
+					cli.IntFlag{
+						Name:  "chunk",
+						Usage: "Byte `size` of eash chunk.",
+						Value: 256,
+					},
+				},
+			},
+			{
+				Name:        "reconstruct",
+				Usage:       "Reconstruct a file from a set of secrets",
+				ArgsUsage:   "<file>...",
+				Description: "reconstruct command reconstructs a file from a given set of shares.",
+				Action:      simple.CmdReconstruct,
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "output",
+						Usage: "Store the reconstructed secret to the `FILE`.",
+					},
+				},
 			},
 		},
 	},

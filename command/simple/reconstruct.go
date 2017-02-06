@@ -1,11 +1,11 @@
-package command
+package simple
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"strings"
 
-	"github.com/itslab-kyushu/cgss/cgss"
+	"github.com/itslab-kyushu/cgss/sss"
 	"github.com/urfave/cli"
 )
 
@@ -35,7 +35,7 @@ func CmdReconstruct(c *cli.Context) error {
 
 func cmdReconstruct(opt *reconstructOpt) error {
 
-	shares := make([]cgss.Share, len(opt.ShareFiles))
+	shares := make([]sss.Share, len(opt.ShareFiles))
 	for i, f := range opt.ShareFiles {
 
 		data, err := ioutil.ReadFile(f)
@@ -49,7 +49,7 @@ func cmdReconstruct(opt *reconstructOpt) error {
 
 	}
 
-	secret, err := cgss.Reconstruct(shares)
+	secret, err := sss.Reconstruct(shares)
 	if err != nil {
 		return err
 	}
@@ -61,6 +61,6 @@ func cmdReconstruct(opt *reconstructOpt) error {
 func outputFile(sharename string) string {
 
 	components := strings.Split(sharename, ".")
-	return strings.Join(components[:len(components)-3], ".")
+	return strings.Join(components[:len(components)-2], ".")
 
 }
