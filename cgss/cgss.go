@@ -25,10 +25,13 @@ import (
 	"context"
 	"crypto/rand"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"math"
 	"math/big"
 	"runtime"
 
+	"github.com/cheggaaa/pb"
 	"github.com/itslab-kyushu/cgss/sss"
 	"golang.org/x/sync/errgroup"
 )
@@ -61,7 +64,11 @@ type DistributeOpt struct {
 }
 
 // Distribute computes shares having a given secret.
-func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt) (shares []Share, err error) {
+func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt, status io.Writer) (shares []Share, err error) {
+
+	if status == nil {
+		status = ioutil.Discard
+	}
 
 	// Prepare a field.
 	prime, err := rand.Prime(rand.Reader, opt.ChunkSize*8+2)
@@ -86,6 +93,12 @@ func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt) (shares 
 			},
 		}
 	}
+
+	// Configure logging.
+	bar := pb.New(nchunk)
+	bar.Output = status
+	bar.Start()
+	defer bar.Finish()
 
 	wg, ctx := errgroup.WithContext(ctx)
 	cpus := runtime.NumCPU()
@@ -113,6 +126,7 @@ func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt) (shares 
 			semaphore <- struct{}{}
 			wg.Go(func() (err error) {
 				defer func() { <-semaphore }()
+				defer bar.Increment()
 
 				// Check the context.
 				select {
@@ -164,17 +178,29 @@ func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt) (shares 
 }
 
 // Reconstruct computes the secret value from a set of shares.
-func Reconstruct(ctx context.Context, shares []Share) (res []byte, err error) {
+func Reconstruct(ctx context.Context, shares []Share, status io.Writer) (res []byte, err error) {
+
+	if status == nil {
+		status = ioutil.Discard
+	}
 
 	if len(shares) == 0 {
 		err = fmt.Errorf("No shares are given")
 		return
 	}
 
-	bytes := make([][]byte, len(shares[0].DataShare.Value))
+	nchunk := len(shares[0].DataShare.Value)
+
+	// Configure logging.
+	bar := pb.New(nchunk)
+	bar.Output = status
+	bar.Start()
+	defer bar.Finish()
+
+	bytes := make([][]byte, nchunk)
 	wg, ctx := errgroup.WithContext(ctx)
 	semaphore := make(chan struct{}, runtime.NumCPU())
-	for chunk := 0; chunk < len(shares[0].DataShare.Value); chunk++ {
+	for chunk := 0; chunk < nchunk; chunk++ {
 
 		select {
 		case <-ctx.Done():
@@ -187,6 +213,7 @@ func Reconstruct(ctx context.Context, shares []Share) (res []byte, err error) {
 			semaphore <- struct{}{}
 			wg.Go(func() (err error) {
 				defer func() { <-semaphore }()
+				defer bar.Increment()
 
 				select {
 				case <-ctx.Done():

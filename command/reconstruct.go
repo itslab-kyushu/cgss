@@ -24,7 +24,9 @@ package command
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/itslab-kyushu/cgss/cgss"
@@ -57,6 +59,7 @@ func CmdReconstruct(c *cli.Context) error {
 
 func cmdReconstruct(opt *reconstructOpt) error {
 
+	fmt.Fprintln(os.Stderr, "Reading share files.")
 	shares := make([]cgss.Share, len(opt.ShareFiles))
 	for i, f := range opt.ShareFiles {
 		data, err := ioutil.ReadFile(f)
@@ -68,7 +71,8 @@ func cmdReconstruct(opt *reconstructOpt) error {
 		}
 	}
 
-	secret, err := cgss.Reconstruct(context.Background(), shares)
+	fmt.Fprintln(os.Stderr, "Reconstructing the secret.")
+	secret, err := cgss.Reconstruct(context.Background(), shares, os.Stderr)
 	if err != nil {
 		return err
 	}

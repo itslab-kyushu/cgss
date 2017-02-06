@@ -26,6 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -102,14 +103,16 @@ func cmdDistribute(opt *distributeOpt) (err error) {
 		return
 	}
 
+	fmt.Fprintln(os.Stderr, "Creating shares")
 	ctx := context.Background()
-	shares, err := cgss.Distribute(ctx, secret, &opt.DistributeOpt)
+	shares, err := cgss.Distribute(ctx, secret, &opt.DistributeOpt, os.Stderr)
 	if err != nil {
 		return
 	}
 
 	base := filepath.FromSlash(filepath.Join(filepath.ToSlash(opt.Dir), filepath.Base(filepath.ToSlash(opt.Filename))))
 
+	fmt.Fprintln(os.Stderr, "Writing share files")
 	wg, ctx := errgroup.WithContext(ctx)
 	cpus := runtime.NumCPU()
 	semaphore := make(chan struct{}, cpus)
