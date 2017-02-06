@@ -118,7 +118,7 @@ func cmdDistribute(opt *distributeOpt) (err error) {
 		default:
 		}
 
-		func(s *cgss.Share) {
+		func(s cgss.Share) {
 			semaphore <- struct{}{}
 			wg.Go(func() (err error) {
 				defer func() { <-semaphore }()
@@ -140,7 +140,7 @@ func cmdDistribute(opt *distributeOpt) (err error) {
 				return ioutil.WriteFile(filename, data, 0644)
 
 			})
-		}(&s)
+		}(s)
 
 	}
 	return wg.Wait()
