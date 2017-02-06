@@ -24,11 +24,11 @@ func CmdDistribute(c *cli.Context) (err error) {
 		return cli.ShowSubcommandHelp(c)
 	}
 
-	size, err := strconv.Atoi(c.Args().Get(1))
+	threshold, err := strconv.Atoi(c.Args().Get(1))
 	if err != nil {
 		return
 	}
-	threshold, err := strconv.Atoi(c.Args().Get(2))
+	size, err := strconv.Atoi(c.Args().Get(2))
 	if err != nil {
 		return
 	}

@@ -21,7 +21,7 @@ var Commands = cli.Commands{
 			{
 				Name:        "distribute",
 				Usage:       "Distribute a file",
-				ArgsUsage:   "<file> <share size> <threshold>",
+				ArgsUsage:   "<file> <threshold> <share size>",
 				Description: "distribute command makes a set of shares of a given file.",
 				Action:      simple.CmdDistribute,
 				Flags: []cli.Flag{
