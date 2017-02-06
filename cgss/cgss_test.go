@@ -40,7 +40,12 @@ func TestCGSS(t *testing.T) {
 	dthreshold := 3
 	ctx := context.Background()
 
-	shares, err := Distribute(ctx, secret, chunksize, allocation, gthreshold, dthreshold)
+	shares, err := Distribute(ctx, secret, &DistributeOpt{
+		ChunkSize:      chunksize,
+		Allocation:     allocation,
+		GroupThreshold: gthreshold,
+		DataThreshold:  dthreshold,
+	})
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -70,7 +75,12 @@ func TestMarshall(t *testing.T) {
 	gthreshold := 2
 	dthreshold := 2
 
-	shares, err := Distribute(context.Background(), secret, chunksize, allocation, gthreshold, dthreshold)
+	shares, err := Distribute(context.Background(), secret, &DistributeOpt{
+		ChunkSize:      chunksize,
+		Allocation:     allocation,
+		GroupThreshold: gthreshold,
+		DataThreshold:  dthreshold,
+	})
 	if err != nil {
 		t.Fatal(err.Error())
 	}

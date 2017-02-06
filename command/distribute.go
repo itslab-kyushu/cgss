@@ -38,12 +38,9 @@ import (
 )
 
 type distributeOpt struct {
-	Filename       string
-	Dir            string
-	ChunkSize      int
-	Allocation     cgss.Allocation
-	GroupThreshold int
-	DataThreshold  int
+	cgss.DistributeOpt
+	Filename string
+	Dir      string
 }
 
 // CmdDistribute executes distribute command.
@@ -86,12 +83,14 @@ func CmdDistribute(c *cli.Context) (err error) {
 	}
 
 	return cmdDistribute(&distributeOpt{
-		Filename:       c.Args().Get(0),
-		Dir:            c.String("dir"),
-		ChunkSize:      c.Int("chunk"),
-		Allocation:     allocation,
-		GroupThreshold: gthreshold,
-		DataThreshold:  dthreshold,
+		Filename: c.Args().Get(0),
+		Dir:      c.String("dir"),
+		DistributeOpt: cgss.DistributeOpt{
+			ChunkSize:      c.Int("chunk"),
+			Allocation:     allocation,
+			GroupThreshold: gthreshold,
+			DataThreshold:  dthreshold,
+		},
 	})
 
 }
@@ -104,7 +103,7 @@ func cmdDistribute(opt *distributeOpt) (err error) {
 	}
 
 	ctx := context.Background()
-	shares, err := cgss.Distribute(ctx, secret, opt.ChunkSize, opt.Allocation, opt.GroupThreshold, opt.DataThreshold)
+	shares, err := cgss.Distribute(ctx, secret, &opt.DistributeOpt)
 	if err != nil {
 		return
 	}

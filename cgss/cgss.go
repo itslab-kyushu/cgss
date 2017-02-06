@@ -52,19 +52,27 @@ func (s *Share) DataKey() *big.Int {
 	return s.DataShare.Key
 }
 
+// DistributeOpt defines arguments of Distribute function.
+type DistributeOpt struct {
+	ChunkSize      int
+	Allocation     Allocation
+	GroupThreshold int
+	DataThreshold  int
+}
+
 // Distribute computes shares having a given secret.
-func Distribute(ctx context.Context, secret []byte, chunksize int, allocation Allocation, gthreshold, dthreshold int) (shares []Share, err error) {
+func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt) (shares []Share, err error) {
 
 	// Prepare a field.
-	prime, err := rand.Prime(rand.Reader, chunksize*8+2)
+	prime, err := rand.Prime(rand.Reader, opt.ChunkSize*8+2)
 	if err != nil {
 		return
 	}
 	field := sss.NewField(prime)
 
 	// Total number of chunks.
-	nchunk := int(math.Ceil(float64(len(secret)) / float64(chunksize)))
-	nshare := allocation.Sum()
+	nchunk := int(math.Ceil(float64(len(secret)) / float64(opt.ChunkSize)))
+	nshare := opt.Allocation.Sum()
 
 	// Prepare shares.
 	shares = make([]Share, nshare)
@@ -79,7 +87,6 @@ func Distribute(ctx context.Context, secret []byte, chunksize int, allocation Al
 		}
 	}
 
-	var value *big.Int
 	wg, ctx := errgroup.WithContext(ctx)
 	cpus := runtime.NumCPU()
 	semaphore := make(chan struct{}, cpus)
@@ -92,9 +99,10 @@ func Distribute(ctx context.Context, secret []byte, chunksize int, allocation Al
 		default:
 		}
 
-		if len(secret) > chunksize {
-			value = new(big.Int).SetBytes(secret[:chunksize])
-			secret = secret[chunksize:]
+		var value *big.Int
+		if len(secret) > opt.ChunkSize {
+			value = new(big.Int).SetBytes(secret[:opt.ChunkSize])
+			secret = secret[opt.ChunkSize:]
 		} else {
 			value = new(big.Int).SetBytes(secret)
 			secret = nil
@@ -123,23 +131,23 @@ func Distribute(ctx context.Context, secret []byte, chunksize int, allocation Al
 				c := new(big.Int).Add(value, nu)
 
 				// Create shares for the reconstructor's secret.
-				rshares, err := sss.Distribute(nu.Bytes(), chunksize, allocation.Size(), gthreshold)
+				rshares, err := sss.Distribute(nu.Bytes(), opt.ChunkSize, opt.Allocation.Size(), opt.GroupThreshold)
 				if err != nil {
 					return
 				}
 
 				// Create shares for the tentative secret.
-				polynomial, err := sss.NewPolynomial(field, c, dthreshold-1)
+				polynomial, err := sss.NewPolynomial(field, c, opt.DataThreshold-1)
 				if err != nil {
 					return
 				}
-				iter := allocation.Iterator()
+				iter := opt.Allocation.Iterator()
 				for i := range shares {
 					key := big.NewInt(int64(i + 1))
 					shares[i].DataShare.Value[chunk] = polynomial.Call(key)
 					group, ok := iter.Next()
 					if !ok {
-						return fmt.Errorf("Allocation is not enough: %v", allocation)
+						return fmt.Errorf("Allocation is not enough: %v", opt.Allocation)
 					}
 					shares[i].GroupShare[chunk] = rshares[group]
 				}
