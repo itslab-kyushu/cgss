@@ -21,7 +21,12 @@
 
 package cgss
 
-import "testing"
+import (
+	"encoding/json"
+	"testing"
+
+	"github.com/itslab-kyushu/cgss/sss"
+)
 
 func TestCGSS(t *testing.T) {
 
@@ -45,5 +50,56 @@ func TestCGSS(t *testing.T) {
 	if string(secret) != string(res) {
 		t.Error("Reconstructed secret is wrong:", string(res))
 	}
+
+}
+
+func TestMarshall(t *testing.T) {
+
+	var err error
+	secret := []byte("abcdefg")
+	chunksize := 8
+
+	allocation := Allocation{1, 1}
+	gthreshold := 2
+	dthreshold := 2
+
+	shares, err := Distribute(secret, chunksize, allocation, gthreshold, dthreshold)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
+	bytes, err := json.Marshal(shares[0])
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
+	var res Share
+	if err = json.Unmarshal(bytes, &res); err != nil {
+		t.Error(err.Error())
+	}
+
+	if !cmpShare(shares[0].DataShare, res.DataShare) || !cmpShare(shares[0].GroupShare, res.GroupShare) {
+		t.Error("Marshal/Unmarshal don't work as expected:", res)
+	}
+
+}
+
+func cmpShare(lhs, rhs sss.Share) bool {
+
+	if lhs.Field.Prime.Cmp(rhs.Field.Prime) != 0 {
+		return false
+	}
+	if lhs.Key.Cmp(rhs.Key) != 0 {
+		return false
+	}
+	if len(lhs.Value) != len(rhs.Value) {
+		return false
+	}
+	for i, v := range lhs.Value {
+		if v.Cmp(rhs.Value[i]) != 0 {
+			return false
+		}
+	}
+	return true
 
 }
