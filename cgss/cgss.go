@@ -180,26 +180,18 @@ func beta(field *sss.Field, shares []Share, t int) *big.Int {
 
 // distinctGroupShares returns a set of distinct group shares.
 func distinctGroupShares(shares []Share, index int) (res []sss.Share, err error) {
-
-	set := map[string]sss.Share{}
+	res = []sss.Share{}
+	set := map[string]struct{}{}
 	for _, s := range shares {
-		if len(s.GroupShare) < index {
+		key := s.GroupKey()
+		if key == nil {
 			return nil, fmt.Errorf("Group shares are broken")
 		}
-
-		key := s.GroupKey().Text(16)
-		if _, exist := set[key]; !exist {
-			set[key] = s.GroupShare[index]
+		id := key.Text(16)
+		if _, exist := set[id]; !exist {
+			set[id] = struct{}{}
+			res = append(res, s.GroupShare[index])
 		}
 	}
-
-	res = make([]sss.Share, len(set))
-	i := 0
-	for _, v := range set {
-		res[i] = v
-		i++
-	}
-
 	return
-
 }
