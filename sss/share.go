@@ -1,5 +1,5 @@
 //
-// sss/field.go
+// sss/share.go
 //
 // Copyright (c) 2017 Junpei Kawamoto
 //
@@ -27,52 +27,53 @@ import (
 	"math/big"
 )
 
-// Field represents a finite field Z/pZ.
-type Field struct {
-	// Prime number.
-	Prime *big.Int
-	// Max is Prime - 1.
-	Max *big.Int
+// Share defines a share of Shamir's Secret Sharing scheme.
+type Share struct {
+	Key   *big.Int
+	Value []*big.Int
+	Field *Field
 }
 
-// compactField defines a field to marshal/unmarshal.
-type compactField struct {
-	// Prime number.
-	Prime string
-}
-
-// NewField creates a new finite field.
-func NewField(prime *big.Int) *Field {
-
-	return &Field{
-		Prime: prime,
-		Max:   new(big.Int).Sub(prime, big.NewInt(1)),
-	}
-
+type compactShare struct {
+	Key   string
+	Value []string
+	Field *Field
 }
 
 // MarshalJSON implements Marshaler interface.
-func (f *Field) MarshalJSON() ([]byte, error) {
+func (s Share) MarshalJSON() ([]byte, error) {
 
-	aux := compactField{
-		Prime: f.Prime.Text(16),
+	aux := compactShare{
+		Key:   s.Key.Text(16),
+		Value: make([]string, len(s.Value)),
+		Field: s.Field,
+	}
+	for i, v := range s.Value {
+		aux.Value[i] = v.Text(16)
 	}
 	return json.Marshal(aux)
 
 }
 
 // UnmarshalJSON implements Unmarshaler interface.
-func (f *Field) UnmarshalJSON(data []byte) (err error) {
+func (s *Share) UnmarshalJSON(data []byte) (err error) {
 
-	var aux compactField
+	var aux compactShare
 	if err = json.Unmarshal(data, &aux); err != nil {
 		return
 	}
 	var ok bool
-	if f.Prime, ok = new(big.Int).SetString(aux.Prime, 16); !ok {
-		return fmt.Errorf("Given Field is broken: %v", aux)
+	if s.Key, ok = new(big.Int).SetString(aux.Key, 16); !ok {
+		return fmt.Errorf("Given share is broken: %v", aux)
 	}
-	f.Max = new(big.Int).Sub(f.Prime, big.NewInt(1))
+
+	s.Value = make([]*big.Int, len(aux.Value))
+	for i, v := range aux.Value {
+		if s.Value[i], ok = new(big.Int).SetString(v, 16); !ok {
+			return fmt.Errorf("Given share is broken: %v", aux)
+		}
+	}
+	s.Field = aux.Field
 	return
 
 }

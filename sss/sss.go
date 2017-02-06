@@ -28,13 +28,6 @@ import (
 	"math/big"
 )
 
-// Share defines a share of Shamir's Secret Sharing scheme.
-type Share struct {
-	Key   *big.Int
-	Value []*big.Int
-	Field *Field
-}
-
 // Distribute computes shares having a given secret.
 func Distribute(secret []byte, chunkByte, size, threshold int) (shares []Share, err error) {
 
