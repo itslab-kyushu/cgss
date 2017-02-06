@@ -1,4 +1,4 @@
-package command
+package simple
 
 import (
 	"encoding/json"
