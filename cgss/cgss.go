@@ -53,7 +53,7 @@ func (s *Share) DataKey() *big.Int {
 }
 
 // Distribute computes shares having a given secret.
-func Distribute(secret []byte, chunksize int, allocation Allocation, gthreshold, dthreshold int) (shares []Share, err error) {
+func Distribute(ctx context.Context, secret []byte, chunksize int, allocation Allocation, gthreshold, dthreshold int) (shares []Share, err error) {
 
 	// Prepare a field.
 	prime, err := rand.Prime(rand.Reader, chunksize*8+2)
@@ -80,7 +80,7 @@ func Distribute(secret []byte, chunksize int, allocation Allocation, gthreshold,
 	}
 
 	var value *big.Int
-	wg, ctx := errgroup.WithContext(context.Background())
+	wg, ctx := errgroup.WithContext(ctx)
 	cpus := runtime.NumCPU()
 	semaphore := make(chan struct{}, cpus)
 	for chunk := 0; chunk < nchunk; chunk++ {
@@ -156,7 +156,7 @@ func Distribute(secret []byte, chunksize int, allocation Allocation, gthreshold,
 }
 
 // Reconstruct computes the secret value from a set of shares.
-func Reconstruct(shares []Share) (res []byte, err error) {
+func Reconstruct(ctx context.Context, shares []Share) (res []byte, err error) {
 
 	if len(shares) == 0 {
 		err = fmt.Errorf("No shares are given")
@@ -164,7 +164,7 @@ func Reconstruct(shares []Share) (res []byte, err error) {
 	}
 
 	bytes := make([][]byte, len(shares[0].DataShare.Value))
-	wg, ctx := errgroup.WithContext(context.Background())
+	wg, ctx := errgroup.WithContext(ctx)
 	semaphore := make(chan struct{}, runtime.NumCPU())
 	for chunk := 0; chunk < len(shares[0].DataShare.Value); chunk++ {
 

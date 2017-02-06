@@ -22,6 +22,7 @@
 package cgss
 
 import (
+	"context"
 	"encoding/json"
 	"testing"
 
@@ -37,8 +38,9 @@ func TestCGSS(t *testing.T) {
 	allocation := Allocation{2, 2, 2}
 	gthreshold := 2
 	dthreshold := 3
+	ctx := context.Background()
 
-	shares, err := Distribute(secret, chunksize, allocation, gthreshold, dthreshold)
+	shares, err := Distribute(ctx, secret, chunksize, allocation, gthreshold, dthreshold)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -48,7 +50,7 @@ func TestCGSS(t *testing.T) {
 	}
 
 	obtained := []Share{shares[0], shares[1], shares[2]}
-	res, err := Reconstruct(obtained)
+	res, err := Reconstruct(ctx, obtained)
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -68,7 +70,7 @@ func TestMarshall(t *testing.T) {
 	gthreshold := 2
 	dthreshold := 2
 
-	shares, err := Distribute(secret, chunksize, allocation, gthreshold, dthreshold)
+	shares, err := Distribute(context.Background(), secret, chunksize, allocation, gthreshold, dthreshold)
 	if err != nil {
 		t.Fatal(err.Error())
 	}

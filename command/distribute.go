@@ -100,12 +100,13 @@ func cmdDistribute(opt *distributeOpt) (err error) {
 		return
 	}
 
-	shares, err := cgss.Distribute(secret, opt.ChunkSize, opt.Allocation, opt.GroupThreshold, opt.DataThreshold)
+	ctx := context.Background()
+	shares, err := cgss.Distribute(ctx, secret, opt.ChunkSize, opt.Allocation, opt.GroupThreshold, opt.DataThreshold)
 	if err != nil {
 		return
 	}
 
-	wg, ctx := errgroup.WithContext(context.Background())
+	wg, ctx := errgroup.WithContext(ctx)
 	cpus := runtime.NumCPU()
 	semaphore := make(chan struct{}, cpus)
 	for _, s := range shares {
