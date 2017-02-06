@@ -91,8 +91,6 @@ func CmdDistribute(c *cli.Context) (err error) {
 
 func cmdDistribute(opt *distributeOpt) (err error) {
 
-	fmt.Println(opt)
-
 	secret, err := ioutil.ReadFile(opt.Filename)
 	if err != nil {
 		return
