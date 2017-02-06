@@ -82,6 +82,9 @@ func cmdReconstruct(opt *reconstructOpt) error {
 func outputFile(sharename string) string {
 
 	components := strings.Split(sharename, ".")
+	if len(components) < 2 {
+		return ""
+	}
 	return strings.Join(components[:len(components)-2], ".")
 
 }
