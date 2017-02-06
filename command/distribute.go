@@ -26,6 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -38,6 +39,7 @@ import (
 
 type distributeOpt struct {
 	Filename       string
+	Dir            string
 	ChunkSize      int
 	Allocation     cgss.Allocation
 	GroupThreshold int
@@ -85,6 +87,7 @@ func CmdDistribute(c *cli.Context) (err error) {
 
 	return cmdDistribute(&distributeOpt{
 		Filename:       c.Args().Get(0),
+		Dir:            c.String("dir"),
 		ChunkSize:      c.Int("chunk"),
 		Allocation:     allocation,
 		GroupThreshold: gthreshold,
@@ -105,6 +108,8 @@ func cmdDistribute(opt *distributeOpt) (err error) {
 	if err != nil {
 		return
 	}
+
+	base := filepath.FromSlash(filepath.Join(filepath.ToSlash(opt.Dir), filepath.Base(filepath.ToSlash(opt.Filename))))
 
 	wg, ctx := errgroup.WithContext(ctx)
 	cpus := runtime.NumCPU()
@@ -136,8 +141,7 @@ func cmdDistribute(opt *distributeOpt) (err error) {
 
 				g := s.GroupKey().Text(16)
 				d := s.DataKey().Text(16)
-				filename := fmt.Sprintf("%s.%s.%s.json", opt.Filename, g, d)
-				return ioutil.WriteFile(filename, data, 0644)
+				return ioutil.WriteFile(fmt.Sprintf("%s.%s.%s.json", base, g, d), data, 0644)
 
 			})
 		}(s)

@@ -47,6 +47,10 @@ var Commands = cli.Commands{
 				Usage: "Byte `size` of eash chunk.",
 				Value: 256,
 			},
+			cli.StringFlag{
+				Name:  "dir",
+				Usage: "Store shares into the given directory.",
+			},
 		},
 	},
 	{
