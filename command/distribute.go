@@ -22,11 +22,15 @@
 package command
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"runtime"
 	"strconv"
 	"strings"
+
+	"golang.org/x/sync/errgroup"
 
 	"github.com/itslab-kyushu/cgss/cgss"
 	"github.com/urfave/cli"
@@ -101,22 +105,43 @@ func cmdDistribute(opt *distributeOpt) (err error) {
 		return
 	}
 
+	wg, ctx := errgroup.WithContext(context.Background())
+	cpus := runtime.NumCPU()
+	semaphore := make(chan struct{}, cpus)
 	for _, s := range shares {
-		// TODO: do parallel
 
-		data, err := json.Marshal(s)
-		if err != nil {
-			return err
+		// Check the current context.
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		default:
 		}
 
-		g := s.GroupKey().Text(16)
-		d := s.DataKey().Text(16)
-		filename := fmt.Sprintf("%s.%s.%s.json", opt.Filename, g, d)
-		if err = ioutil.WriteFile(filename, data, 0644); err != nil {
-			return err
-		}
+		func(s *cgss.Share) {
+			semaphore <- struct{}{}
+			wg.Go(func() (err error) {
+				defer func() { <-semaphore }()
+
+				select {
+				case <-ctx.Done():
+					return
+				default:
+				}
+
+				data, err := json.Marshal(s)
+				if err != nil {
+					return
+				}
+
+				g := s.GroupKey().Text(16)
+				d := s.DataKey().Text(16)
+				filename := fmt.Sprintf("%s.%s.%s.json", opt.Filename, g, d)
+				return ioutil.WriteFile(filename, data, 0644)
+
+			})
+		}(&s)
 
 	}
-	return
+	return wg.Wait()
 
 }

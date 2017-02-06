@@ -193,7 +193,6 @@ func Reconstruct(shares []Share) (bytes []byte, err error) {
 // beta computes the following value:
 //   \mul_{i<=u<=k, u!=t} \frac{u-th key}{(u-th key) - (t-th key)}
 func beta(field *sss.Field, shares []Share, t int) *big.Int {
-
 	res := big.NewInt(1)
 	for i, s := range shares {
 		if i == t {
@@ -204,9 +203,7 @@ func beta(field *sss.Field, shares []Share, t int) *big.Int {
 		res.Mul(res, v)
 		res.Mod(res, field.Prime)
 	}
-
 	return res.Mod(res, field.Prime)
-
 }
 
 // distinctGroupShares returns a set of distinct group shares.
