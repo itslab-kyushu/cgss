@@ -1,4 +1,23 @@
 #!/usr/bin/env python
+#
+# helper/convert.py
+#
+# Copyright (c) 2017 Junpei Kawamoto
+#
+# This file is part of cgss.
+#
+# cgss is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# cgss is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with cgss.  If not, see <http://www.gnu.org/licenses/>.
 """Convert binary files contain prime numbers in a readable format.
 """
 from __future__ import print_function
