@@ -25,6 +25,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -36,6 +37,7 @@ import (
 type reconstructOpt struct {
 	ShareFiles []string
 	OutputFile string
+	Log        io.Writer
 }
 
 // CmdReconstruct executes reconstruct command.
@@ -45,9 +47,17 @@ func CmdReconstruct(c *cli.Context) error {
 		return cli.ShowSubcommandHelp(c)
 	}
 
+	var log io.Writer
+	if c.GlobalBool("quiet") {
+		log = ioutil.Discard
+	} else {
+		log = os.Stderr
+	}
+
 	opt := &reconstructOpt{
 		ShareFiles: append([]string{c.Args().First()}, c.Args().Tail()...),
 		OutputFile: c.String("output"),
+		Log:        log,
 	}
 	if opt.OutputFile == "" {
 		opt.OutputFile = outputFile(opt.ShareFiles[0])
@@ -59,7 +69,7 @@ func CmdReconstruct(c *cli.Context) error {
 
 func cmdReconstruct(opt *reconstructOpt) error {
 
-	fmt.Fprintln(os.Stderr, "Reading share files.")
+	fmt.Fprintln(opt.Log, "Reading share files")
 	shares := make([]cgss.Share, len(opt.ShareFiles))
 	for i, f := range opt.ShareFiles {
 		data, err := ioutil.ReadFile(f)
@@ -71,8 +81,8 @@ func cmdReconstruct(opt *reconstructOpt) error {
 		}
 	}
 
-	fmt.Fprintln(os.Stderr, "Reconstructing the secret.")
-	secret, err := cgss.Reconstruct(context.Background(), shares, os.Stderr)
+	fmt.Fprintln(opt.Log, "Reconstructing the secret")
+	secret, err := cgss.Reconstruct(context.Background(), shares, opt.Log)
 	if err != nil {
 		return err
 	}

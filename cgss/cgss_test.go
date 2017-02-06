@@ -45,7 +45,7 @@ func TestCGSS(t *testing.T) {
 		Allocation:     allocation,
 		GroupThreshold: gthreshold,
 		DataThreshold:  dthreshold,
-	})
+	}, nil)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -55,7 +55,7 @@ func TestCGSS(t *testing.T) {
 	}
 
 	obtained := []Share{shares[0], shares[1], shares[2]}
-	res, err := Reconstruct(ctx, obtained)
+	res, err := Reconstruct(ctx, obtained, nil)
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -80,7 +80,7 @@ func TestMarshall(t *testing.T) {
 		Allocation:     allocation,
 		GroupThreshold: gthreshold,
 		DataThreshold:  dthreshold,
-	})
+	}, nil)
 	if err != nil {
 		t.Fatal(err.Error())
 	}

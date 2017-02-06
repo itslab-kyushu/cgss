@@ -31,7 +31,12 @@ import (
 )
 
 // GlobalFlags defines a set of global flags.
-var GlobalFlags = []cli.Flag{}
+var GlobalFlags = []cli.Flag{
+	cli.BoolFlag{
+		Name:  "quiet",
+		Usage: "Omit logging outputs.",
+	},
+}
 
 // Commands defines a set of commands.
 var Commands = cli.Commands{

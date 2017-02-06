@@ -25,6 +25,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -42,6 +43,7 @@ type distributeOpt struct {
 	cgss.DistributeOpt
 	Filename string
 	Dir      string
+	Log      io.Writer
 }
 
 // CmdDistribute executes distribute command.
@@ -83,6 +85,13 @@ func CmdDistribute(c *cli.Context) (err error) {
 		}
 	}
 
+	var log io.Writer
+	if c.GlobalBool("quiet") {
+		log = ioutil.Discard
+	} else {
+		log = os.Stderr
+	}
+
 	return cmdDistribute(&distributeOpt{
 		Filename: c.Args().Get(0),
 		Dir:      c.String("dir"),
@@ -92,6 +101,7 @@ func CmdDistribute(c *cli.Context) (err error) {
 			GroupThreshold: gthreshold,
 			DataThreshold:  dthreshold,
 		},
+		Log: log,
 	})
 
 }
@@ -103,16 +113,16 @@ func cmdDistribute(opt *distributeOpt) (err error) {
 		return
 	}
 
-	fmt.Fprintln(os.Stderr, "Creating shares")
+	fmt.Fprintln(opt.Log, "Creating shares")
 	ctx := context.Background()
-	shares, err := cgss.Distribute(ctx, secret, &opt.DistributeOpt, os.Stderr)
+	shares, err := cgss.Distribute(ctx, secret, &opt.DistributeOpt, opt.Log)
 	if err != nil {
 		return
 	}
 
 	base := filepath.FromSlash(filepath.Join(filepath.ToSlash(opt.Dir), filepath.Base(filepath.ToSlash(opt.Filename))))
 
-	fmt.Fprintln(os.Stderr, "Writing share files")
+	fmt.Fprintln(opt.Log, "Writing share files")
 	wg, ctx := errgroup.WithContext(ctx)
 	cpus := runtime.NumCPU()
 	semaphore := make(chan struct{}, cpus)
