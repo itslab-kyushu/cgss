@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/itslab-kyushu/cgss/command"
 	"github.com/itslab-kyushu/cgss/command/simple"
 	"github.com/urfave/cli"
 )
@@ -13,6 +14,33 @@ var GlobalFlags = []cli.Flag{}
 
 // Commands defines a set of commands.
 var Commands = cli.Commands{
+	{
+		Name:        "distribute",
+		Usage:       "Distribute a file by Cross-Group Secret Sharing scheme",
+		ArgsUsage:   "<file> <group threshold> <data threshold> <allocation>",
+		Description: "distribute command makes a set of shares of a given file.",
+		Action:      command.CmdDistribute,
+		Flags: []cli.Flag{
+			cli.IntFlag{
+				Name:  "chunk",
+				Usage: "Byte `size` of eash chunk.",
+				Value: 256,
+			},
+		},
+	},
+	{
+		Name:        "reconstruct",
+		Usage:       "Reconstruct a file from secrets by Cross-Group Secret Sharing scheme",
+		ArgsUsage:   "<file>...",
+		Description: "reconstruct command reconstructs a file from a given set of shares.",
+		Action:      command.CmdReconstruct,
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "output",
+				Usage: "Store the reconstructed secret to the `FILE`.",
+			},
+		},
+	},
 	{
 		Name:  "simple",
 		Usage: "Run Shamir's Secret Sharing scheme",
