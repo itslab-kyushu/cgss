@@ -22,12 +22,15 @@
 package cgss
 
 import (
+	"context"
 	"crypto/rand"
 	"fmt"
 	"math"
 	"math/big"
+	"runtime"
 
 	"github.com/itslab-kyushu/cgss/sss"
+	"golang.org/x/sync/errgroup"
 )
 
 // Share defines a share of the Cross-Group Secret Sharing scheme.
@@ -67,6 +70,7 @@ func Distribute(secret []byte, chunksize int, allocation Allocation, gthreshold,
 	shares = make([]Share, nshare)
 	for i := range shares {
 		shares[i] = Share{
+			GroupShare: make([]sss.Share, nchunk),
 			DataShare: sss.Share{
 				Field: field,
 				Key:   big.NewInt(int64(i + 1)),
@@ -76,7 +80,17 @@ func Distribute(secret []byte, chunksize int, allocation Allocation, gthreshold,
 	}
 
 	var value *big.Int
+	wg, ctx := errgroup.WithContext(context.Background())
+	cpus := runtime.NumCPU()
+	semaphore := make(chan struct{}, cpus)
 	for chunk := 0; chunk < nchunk; chunk++ {
+
+		// Check the context.
+		select {
+		case <-ctx.Done():
+			break
+		default:
+		}
 
 		if len(secret) > chunksize {
 			value = new(big.Int).SetBytes(secret[:chunksize])
@@ -86,41 +100,58 @@ func Distribute(secret []byte, chunksize int, allocation Allocation, gthreshold,
 			secret = nil
 		}
 
-		// Generate reconstructor's secrets.
-		nu, err := rand.Int(rand.Reader, field.Max)
-		if err != nil {
-			return nil, err
-		}
+		func(chunk int, value *big.Int) {
 
-		// Create a tentative secret.
-		c := new(big.Int).Add(value, nu)
+			semaphore <- struct{}{}
+			wg.Go(func() (err error) {
+				defer func() { <-semaphore }()
 
-		// Create shares for the reconstructor's secret.
-		rshares, err := sss.Distribute(nu.Bytes(), chunksize, allocation.Size(), gthreshold)
-		if err != nil {
-			return nil, err
-		}
+				// Check the context.
+				select {
+				case <-ctx.Done():
+					return
+				default:
+				}
 
-		// Create shares for the tentative secret.
-		polynomial, err := sss.NewPolynomial(field, c, dthreshold-1)
-		if err != nil {
-			return nil, err
-		}
-		iter := allocation.Iterator()
-		for i := range shares {
-			key := big.NewInt(int64(i + 1))
-			shares[i].DataShare.Value[chunk] = polynomial.Call(key)
+				// Generate reconstructor's secrets.
+				nu, err := rand.Int(rand.Reader, field.Max)
+				if err != nil {
+					return
+				}
 
-			group, ok := iter.Next()
-			if !ok {
-				return nil, fmt.Errorf("Allocation is not enough: %v", allocation)
-			}
-			shares[i].GroupShare = append(shares[i].GroupShare, rshares[group])
-		}
+				// Create a tentative secret.
+				c := new(big.Int).Add(value, nu)
+
+				// Create shares for the reconstructor's secret.
+				rshares, err := sss.Distribute(nu.Bytes(), chunksize, allocation.Size(), gthreshold)
+				if err != nil {
+					return
+				}
+
+				// Create shares for the tentative secret.
+				polynomial, err := sss.NewPolynomial(field, c, dthreshold-1)
+				if err != nil {
+					return
+				}
+				iter := allocation.Iterator()
+				for i := range shares {
+					key := big.NewInt(int64(i + 1))
+					shares[i].DataShare.Value[chunk] = polynomial.Call(key)
+					group, ok := iter.Next()
+					if !ok {
+						return fmt.Errorf("Allocation is not enough: %v", allocation)
+					}
+					shares[i].GroupShare[chunk] = rshares[group]
+				}
+				return
+
+			})
+
+		}(chunk, value)
 
 	}
 
-	return
+	return shares, wg.Wait()
 
 }
 

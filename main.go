@@ -23,11 +23,15 @@ package main
 
 import (
 	"os"
+	"runtime"
 
 	"github.com/urfave/cli"
 )
 
 func main() {
+
+	cpus := runtime.NumCPU()
+	runtime.GOMAXPROCS(cpus)
 
 	app := cli.NewApp()
 	app.Name = Name

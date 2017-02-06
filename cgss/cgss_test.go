@@ -43,6 +43,10 @@ func TestCGSS(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
+	if len(shares) != allocation.Sum() {
+		t.Fatal("Number of generated shares is wrong:", len(shares))
+	}
+
 	obtained := []Share{shares[0], shares[1], shares[2]}
 	res, err := Reconstruct(obtained)
 	if err != nil {
