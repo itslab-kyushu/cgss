@@ -156,35 +156,66 @@ func Distribute(secret []byte, chunksize int, allocation Allocation, gthreshold,
 }
 
 // Reconstruct computes the secret value from a set of shares.
-func Reconstruct(shares []Share) (bytes []byte, err error) {
+func Reconstruct(shares []Share) (res []byte, err error) {
 
 	if len(shares) == 0 {
 		err = fmt.Errorf("No shares are given")
 		return
 	}
 
-	bytes = []byte{}
+	bytes := make([][]byte, len(shares[0].DataShare.Value))
+	wg, ctx := errgroup.WithContext(context.Background())
+	semaphore := make(chan struct{}, runtime.NumCPU())
 	for chunk := 0; chunk < len(shares[0].DataShare.Value); chunk++ {
 
-		value := big.NewInt(0)
-		field := shares[0].DataShare.Field
-		for i, s := range shares {
-			value.Add(value, new(big.Int).Mul(s.DataShare.Value[chunk], beta(field, shares, i)))
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
 		}
-		value.Mod(value, field.Prime)
 
-		gshares, err := distinctGroupShares(shares, chunk)
-		if err != nil {
-			return nil, err
-		}
-		nu, err := sss.Reconstruct(gshares)
-		if err != nil {
-			return nil, err
-		}
-		value.Sub(value, new(big.Int).SetBytes(nu))
-		value.Mod(value, field.Prime)
-		bytes = append(bytes, value.Bytes()...)
+		func(chunk int) {
 
+			semaphore <- struct{}{}
+			wg.Go(func() (err error) {
+				defer func() { <-semaphore }()
+
+				select {
+				case <-ctx.Done():
+					return
+				default:
+				}
+
+				value := big.NewInt(0)
+				field := shares[0].DataShare.Field
+				for i, s := range shares {
+					value.Add(value, new(big.Int).Mul(s.DataShare.Value[chunk], beta(field, shares, i)))
+				}
+				value.Mod(value, field.Prime)
+
+				gshares, err := distinctGroupShares(shares, chunk)
+				if err != nil {
+					return
+				}
+				nu, err := sss.Reconstruct(gshares)
+				if err != nil {
+					return
+				}
+				value.Sub(value, new(big.Int).SetBytes(nu))
+				value.Mod(value, field.Prime)
+				bytes[chunk] = value.Bytes()
+				return
+			})
+
+		}(chunk)
+
+	}
+
+	if err = wg.Wait(); err != nil {
+		return
+	}
+	for _, v := range bytes {
+		res = append(res, v...)
 	}
 	return
 
