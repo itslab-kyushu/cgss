@@ -22,12 +22,15 @@
 package cgss
 
 import (
+	"context"
 	"crypto/rand"
 	"fmt"
 	"math"
 	"math/big"
+	"runtime"
 
 	"github.com/itslab-kyushu/cgss/sss"
+	"golang.org/x/sync/errgroup"
 )
 
 // Share defines a share of the Cross-Group Secret Sharing scheme.
@@ -50,7 +53,7 @@ func (s *Share) DataKey() *big.Int {
 }
 
 // Distribute computes shares having a given secret.
-func Distribute(secret []byte, chunksize int, allocation Allocation, gthreshold, dthreshold int) (shares []Share, err error) {
+func Distribute(ctx context.Context, secret []byte, chunksize int, allocation Allocation, gthreshold, dthreshold int) (shares []Share, err error) {
 
 	// Prepare a field.
 	prime, err := rand.Prime(rand.Reader, chunksize*8+2)
@@ -67,6 +70,7 @@ func Distribute(secret []byte, chunksize int, allocation Allocation, gthreshold,
 	shares = make([]Share, nshare)
 	for i := range shares {
 		shares[i] = Share{
+			GroupShare: make([]sss.Share, nchunk),
 			DataShare: sss.Share{
 				Field: field,
 				Key:   big.NewInt(int64(i + 1)),
@@ -76,7 +80,17 @@ func Distribute(secret []byte, chunksize int, allocation Allocation, gthreshold,
 	}
 
 	var value *big.Int
+	wg, ctx := errgroup.WithContext(ctx)
+	cpus := runtime.NumCPU()
+	semaphore := make(chan struct{}, cpus)
 	for chunk := 0; chunk < nchunk; chunk++ {
+
+		// Check the context.
+		select {
+		case <-ctx.Done():
+			break
+		default:
+		}
 
 		if len(secret) > chunksize {
 			value = new(big.Int).SetBytes(secret[:chunksize])
@@ -86,74 +100,122 @@ func Distribute(secret []byte, chunksize int, allocation Allocation, gthreshold,
 			secret = nil
 		}
 
-		// Generate reconstructor's secrets.
-		nu, err := rand.Int(rand.Reader, field.Max)
-		if err != nil {
-			return nil, err
-		}
+		func(chunk int, value *big.Int) {
 
-		// Create a tentative secret.
-		c := new(big.Int).Add(value, nu)
+			semaphore <- struct{}{}
+			wg.Go(func() (err error) {
+				defer func() { <-semaphore }()
 
-		// Create shares for the reconstructor's secret.
-		rshares, err := sss.Distribute(nu.Bytes(), chunksize, allocation.Size(), gthreshold)
-		if err != nil {
-			return nil, err
-		}
+				// Check the context.
+				select {
+				case <-ctx.Done():
+					return
+				default:
+				}
 
-		// Create shares for the tentative secret.
-		polynomial, err := sss.NewPolynomial(field, c, dthreshold-1)
-		if err != nil {
-			return nil, err
-		}
-		iter := allocation.Iterator()
-		for i := range shares {
-			key := big.NewInt(int64(i + 1))
-			shares[i].DataShare.Value[chunk] = polynomial.Call(key)
+				// Generate reconstructor's secrets.
+				nu, err := rand.Int(rand.Reader, field.Max)
+				if err != nil {
+					return
+				}
 
-			group, ok := iter.Next()
-			if !ok {
-				return nil, fmt.Errorf("Allocation is not enough: %v", allocation)
-			}
-			shares[i].GroupShare = append(shares[i].GroupShare, rshares[group])
-		}
+				// Create a tentative secret.
+				c := new(big.Int).Add(value, nu)
+
+				// Create shares for the reconstructor's secret.
+				rshares, err := sss.Distribute(nu.Bytes(), chunksize, allocation.Size(), gthreshold)
+				if err != nil {
+					return
+				}
+
+				// Create shares for the tentative secret.
+				polynomial, err := sss.NewPolynomial(field, c, dthreshold-1)
+				if err != nil {
+					return
+				}
+				iter := allocation.Iterator()
+				for i := range shares {
+					key := big.NewInt(int64(i + 1))
+					shares[i].DataShare.Value[chunk] = polynomial.Call(key)
+					group, ok := iter.Next()
+					if !ok {
+						return fmt.Errorf("Allocation is not enough: %v", allocation)
+					}
+					shares[i].GroupShare[chunk] = rshares[group]
+				}
+				return
+
+			})
+
+		}(chunk, value)
 
 	}
 
-	return
+	return shares, wg.Wait()
 
 }
 
 // Reconstruct computes the secret value from a set of shares.
-func Reconstruct(shares []Share) (bytes []byte, err error) {
+func Reconstruct(ctx context.Context, shares []Share) (res []byte, err error) {
 
 	if len(shares) == 0 {
 		err = fmt.Errorf("No shares are given")
 		return
 	}
 
-	bytes = []byte{}
+	bytes := make([][]byte, len(shares[0].DataShare.Value))
+	wg, ctx := errgroup.WithContext(ctx)
+	semaphore := make(chan struct{}, runtime.NumCPU())
 	for chunk := 0; chunk < len(shares[0].DataShare.Value); chunk++ {
 
-		value := big.NewInt(0)
-		field := shares[0].DataShare.Field
-		for i, s := range shares {
-			value.Add(value, new(big.Int).Mul(s.DataShare.Value[chunk], beta(field, shares, i)))
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
 		}
-		value.Mod(value, field.Prime)
 
-		gshares, err := distinctGroupShares(shares, chunk)
-		if err != nil {
-			return nil, err
-		}
-		nu, err := sss.Reconstruct(gshares)
-		if err != nil {
-			return nil, err
-		}
-		value.Sub(value, new(big.Int).SetBytes(nu))
-		value.Mod(value, field.Prime)
-		bytes = append(bytes, value.Bytes()...)
+		func(chunk int) {
 
+			semaphore <- struct{}{}
+			wg.Go(func() (err error) {
+				defer func() { <-semaphore }()
+
+				select {
+				case <-ctx.Done():
+					return
+				default:
+				}
+
+				value := big.NewInt(0)
+				field := shares[0].DataShare.Field
+				for i, s := range shares {
+					value.Add(value, new(big.Int).Mul(s.DataShare.Value[chunk], beta(field, shares, i)))
+				}
+				value.Mod(value, field.Prime)
+
+				gshares, err := distinctGroupShares(shares, chunk)
+				if err != nil {
+					return
+				}
+				nu, err := sss.Reconstruct(gshares)
+				if err != nil {
+					return
+				}
+				value.Sub(value, new(big.Int).SetBytes(nu))
+				value.Mod(value, field.Prime)
+				bytes[chunk] = value.Bytes()
+				return
+			})
+
+		}(chunk)
+
+	}
+
+	if err = wg.Wait(); err != nil {
+		return
+	}
+	for _, v := range bytes {
+		res = append(res, v...)
 	}
 	return
 
@@ -162,7 +224,6 @@ func Reconstruct(shares []Share) (bytes []byte, err error) {
 // beta computes the following value:
 //   \mul_{i<=u<=k, u!=t} \frac{u-th key}{(u-th key) - (t-th key)}
 func beta(field *sss.Field, shares []Share, t int) *big.Int {
-
 	res := big.NewInt(1)
 	for i, s := range shares {
 		if i == t {
@@ -173,33 +234,23 @@ func beta(field *sss.Field, shares []Share, t int) *big.Int {
 		res.Mul(res, v)
 		res.Mod(res, field.Prime)
 	}
-
 	return res.Mod(res, field.Prime)
-
 }
 
 // distinctGroupShares returns a set of distinct group shares.
 func distinctGroupShares(shares []Share, index int) (res []sss.Share, err error) {
-
-	set := map[string]sss.Share{}
+	res = []sss.Share{}
+	set := map[string]struct{}{}
 	for _, s := range shares {
-		if len(s.GroupShare) < index {
+		key := s.GroupKey()
+		if key == nil {
 			return nil, fmt.Errorf("Group shares are broken")
 		}
-
-		key := s.GroupKey().Text(16)
-		if _, exist := set[key]; !exist {
-			set[key] = s.GroupShare[index]
+		id := key.Text(16)
+		if _, exist := set[id]; !exist {
+			set[id] = struct{}{}
+			res = append(res, s.GroupShare[index])
 		}
 	}
-
-	res = make([]sss.Share, len(set))
-	i := 0
-	for _, v := range set {
-		res[i] = v
-		i++
-	}
-
 	return
-
 }

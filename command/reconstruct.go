@@ -22,8 +22,8 @@
 package command
 
 import (
+	"context"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"strings"
 
@@ -58,21 +58,17 @@ func CmdReconstruct(c *cli.Context) error {
 func cmdReconstruct(opt *reconstructOpt) error {
 
 	shares := make([]cgss.Share, len(opt.ShareFiles))
-	fmt.Println(opt.ShareFiles)
 	for i, f := range opt.ShareFiles {
-
 		data, err := ioutil.ReadFile(f)
 		if err != nil {
 			return err
 		}
-
 		if err = json.Unmarshal(data, &shares[i]); err != nil {
 			return err
 		}
-
 	}
 
-	secret, err := cgss.Reconstruct(shares)
+	secret, err := cgss.Reconstruct(context.Background(), shares)
 	if err != nil {
 		return err
 	}
