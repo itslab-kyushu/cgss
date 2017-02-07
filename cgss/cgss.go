@@ -36,25 +36,6 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-// Share defines a share of the Cross-Group Secret Sharing scheme.
-type Share struct {
-	GroupShare []sss.Share
-	DataShare  sss.Share
-}
-
-// GroupKey returns the group key of the share.
-func (s *Share) GroupKey() *big.Int {
-	if len(s.GroupShare) == 0 {
-		return nil
-	}
-	return s.GroupShare[0].Key
-}
-
-// DataKey returns the data key of the share.
-func (s *Share) DataKey() *big.Int {
-	return s.DataShare.Key
-}
-
 // DistributeOpt defines arguments of Distribute function.
 type DistributeOpt struct {
 	ChunkSize      int
