@@ -1,0 +1,44 @@
+syntax = "proto3";
+package kvs;
+
+// Key defines a simple key in the KVS.
+message Key{
+  string name = 1;
+}
+
+// Field represents a finite field Z/pZ.
+message Field{
+  string prime = 1;
+}
+
+// Share represents a basic share in Shamir's secret sharing scheme.
+message Share{
+  string key = 1;
+  repeated string value = 2;
+  Field field = 3;
+}
+
+// Value represents a share in CGSS.
+message Value{
+    repeated Share group_share = 1;
+    Share data_share = 2;
+}
+
+// Entry defines a pair of key and value as an entry in the KVS.
+message Entry{
+  Key key = 1;
+  Value value = 2;
+}
+
+// Define empty requests/responses.
+message PutResponse{}
+message DeleteResponse{}
+message ListRequest{}
+
+// Define the KVS service.
+service Kvs{
+  rpc Get(Key) returns (Value){}
+  rpc Put(Entry) returns (PutResponse){}
+  rpc Delete(Key) returns (DeleteResponse){}
+  rpc List(ListRequest) returns (stream Key){}
+}

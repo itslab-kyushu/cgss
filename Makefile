@@ -18,3 +18,7 @@ build:
 .PHONY: release
 release:
 	ghr  -u jkawamoto  v$(VERSION) pkg/$(VERSION)
+
+.PHONY: proto
+proto:
+	protoc --go_out=plugins=grpc:. kvs/kvs.proto
