@@ -22,6 +22,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"runtime"
 
@@ -29,6 +30,11 @@ import (
 )
 
 func main() {
+
+	if err := StartProfile(); err != nil {
+		fmt.Fprintln("Cannot start profiling:", err.Error())
+	}
+	defer StopProfile()
 
 	cpus := runtime.NumCPU()
 	runtime.GOMAXPROCS(cpus)
