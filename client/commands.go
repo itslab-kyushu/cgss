@@ -62,7 +62,7 @@ var Commands = cli.Commands{
 					},
 					cli.IntFlag{
 						Name:  "max-connection",
-						Usage: "Maximimum connections",
+						Usage: "Maximum connections",
 						Value: 10,
 					},
 				},
@@ -81,12 +81,12 @@ var Commands = cli.Commands{
 					},
 					cli.IntFlag{
 						Name:  "chunk",
-						Usage: "Byte `size` of eash chunk.",
+						Usage: "Byte `size` of each chunk.",
 						Value: 256,
 					},
 					cli.IntFlag{
 						Name:  "max-connection",
-						Usage: "Maximimum connections",
+						Usage: "Maximum connections",
 						Value: 10,
 					},
 				},
@@ -134,7 +134,7 @@ var Commands = cli.Commands{
 				Flags: []cli.Flag{
 					cli.IntFlag{
 						Name:  "chunk",
-						Usage: "Byte `size` of eash chunk.",
+						Usage: "Byte `size` of each chunk.",
 						Value: 256,
 					},
 					cli.StringFlag{

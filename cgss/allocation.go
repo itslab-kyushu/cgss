@@ -32,7 +32,7 @@ func (a Allocation) Sum() (res int) {
 	return
 }
 
-// Size retunrs the size of allocated regions.
+// Size returns the size of allocated regions.
 func (a Allocation) Size() int {
 	return len(a)
 }
