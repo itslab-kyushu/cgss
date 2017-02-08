@@ -42,6 +42,7 @@ var GlobalFlags = []cli.Flag{
 // Commands defines a set of commands.
 var Commands = cli.Commands{
 	{
+		// TODO: Set default config file name and support some flag to over write it.
 		Name:  "remote",
 		Usage: "Access remote CGSS servers",
 		Subcommands: cli.Commands{
@@ -50,8 +51,23 @@ var Commands = cli.Commands{
 				Usage: "Download shares and reconstruct a file",
 			},
 			{
-				Name:  "put",
-				Usage: "Distribute and store shares",
+				Name:        "put",
+				Usage:       "Distribute and store shares",
+				Description: "Create shares of the given file and upload them to servers.",
+				ArgsUsage:   "<config file> <file> <group threshold> <data threshold>",
+				Action:      remote.CmdPut,
+				Flags: []cli.Flag{
+					cli.IntFlag{
+						Name:  "chunk",
+						Usage: "Byte `size` of eash chunk.",
+						Value: 256,
+					},
+					cli.IntFlag{
+						Name:  "max-connection",
+						Usage: "Maximimum connections",
+						Value: 10,
+					},
+				},
 			},
 			{
 				Name:        "delete",
