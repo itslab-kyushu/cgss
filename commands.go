@@ -56,6 +56,10 @@ var Commands = cli.Commands{
 				Name:  "dir",
 				Usage: "Store shares into the given directory.",
 			},
+			cli.BoolFlag{
+				Name:  "no-compress",
+				Usage: "Store shares without compression.",
+			},
 		},
 	},
 	{
