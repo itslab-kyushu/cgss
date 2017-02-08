@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/itslab-kyushu/cgss/sss"
+	"github.com/itslab-kyushu/sss/sss"
 )
 
 func TestCGSS(t *testing.T) {

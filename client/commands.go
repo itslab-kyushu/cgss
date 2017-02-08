@@ -27,7 +27,6 @@ import (
 
 	"github.com/itslab-kyushu/cgss/client/command/local"
 	"github.com/itslab-kyushu/cgss/client/command/remote"
-	"github.com/itslab-kyushu/cgss/client/command/simple"
 	"github.com/urfave/cli"
 )
 
@@ -154,40 +153,6 @@ var Commands = cli.Commands{
 				ArgsUsage:   "<file>...",
 				Description: "reconstruct command reconstructs a file from a given set of shares.",
 				Action:      local.CmdReconstruct,
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "output",
-						Usage: "Store the reconstructed secret to the `FILE`.",
-					},
-				},
-			},
-		},
-	},
-	{
-		Name:  "simple",
-		Usage: "Run Shamir's Secret Sharing scheme",
-		// Desctiprion: "",
-		Subcommands: cli.Commands{
-			{
-				Name:        "distribute",
-				Usage:       "Distribute a file",
-				ArgsUsage:   "<file> <threshold> <share size>",
-				Description: "distribute command makes a set of shares of a given file.",
-				Action:      simple.CmdDistribute,
-				Flags: []cli.Flag{
-					cli.IntFlag{
-						Name:  "chunk",
-						Usage: "Byte `size` of eash chunk.",
-						Value: 256,
-					},
-				},
-			},
-			{
-				Name:        "reconstruct",
-				Usage:       "Reconstruct a file from a set of secrets",
-				ArgsUsage:   "<file>...",
-				Description: "reconstruct command reconstructs a file from a given set of shares.",
-				Action:      simple.CmdReconstruct,
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "output",

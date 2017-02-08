@@ -27,7 +27,7 @@ import (
 
 	"github.com/itslab-kyushu/cgss/cgss"
 	"github.com/itslab-kyushu/cgss/kvs"
-	"github.com/itslab-kyushu/cgss/sss"
+	"github.com/itslab-kyushu/sss/sss"
 )
 
 // ToValue converts a share to a value.

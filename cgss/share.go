@@ -24,7 +24,7 @@ package cgss
 import (
 	"math/big"
 
-	"github.com/itslab-kyushu/cgss/sss"
+	"github.com/itslab-kyushu/sss/sss"
 )
 
 // Share defines a share of the Cross-Group Secret Sharing scheme.

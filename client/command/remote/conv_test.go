@@ -26,7 +26,7 @@ import (
 	"testing"
 
 	"github.com/itslab-kyushu/cgss/cgss"
-	"github.com/itslab-kyushu/cgss/sss"
+	"github.com/itslab-kyushu/sss/sss"
 )
 
 func TestConvert(t *testing.T) {
