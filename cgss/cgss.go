@@ -32,7 +32,7 @@ import (
 	"runtime"
 
 	"github.com/cheggaaa/pb"
-	"github.com/itslab-kyushu/cgss/sss"
+	"github.com/itslab-kyushu/sss/sss"
 	"golang.org/x/sync/errgroup"
 )
 
