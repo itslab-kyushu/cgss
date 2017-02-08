@@ -31,6 +31,7 @@ import (
 	"strings"
 
 	"github.com/itslab-kyushu/cgss/cgss"
+	"github.com/ulikunitz/xz"
 	"github.com/urfave/cli"
 )
 
@@ -67,14 +68,34 @@ func CmdReconstruct(c *cli.Context) error {
 
 }
 
-func cmdReconstruct(opt *reconstructOpt) error {
+func cmdReconstruct(opt *reconstructOpt) (err error) {
 
 	fmt.Fprintln(opt.Log, "Reading share files")
 	shares := make([]cgss.Share, len(opt.ShareFiles))
 	for i, f := range opt.ShareFiles {
-		data, err := ioutil.ReadFile(f)
-		if err != nil {
-			return err
+
+		var data []byte
+		if strings.HasSuffix(f, ".xz") {
+			fp, err := os.Open(f)
+			if err != nil {
+				return err
+			}
+			defer fp.Close()
+
+			r, err := xz.NewReader(fp)
+			if err != nil {
+				return err
+			}
+			data, err = ioutil.ReadAll(r)
+			if err != nil {
+				return err
+			}
+
+		} else {
+			data, err = ioutil.ReadFile(f)
+			if err != nil {
+				return err
+			}
 		}
 		if err = json.Unmarshal(data, &shares[i]); err != nil {
 			return err

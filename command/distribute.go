@@ -37,12 +37,20 @@ import (
 
 	"github.com/itslab-kyushu/cgss/cgss"
 	"github.com/urfave/cli"
+
+	"github.com/ulikunitz/xz"
+)
+
+const (
+	xzFileName   = "%s.%s.%s.xz"
+	jsonFileName = "%s.%s.%s.json"
 )
 
 type distributeOpt struct {
 	cgss.DistributeOpt
 	Filename string
 	Dir      string
+	Compress bool
 	Log      io.Writer
 }
 
@@ -101,7 +109,8 @@ func CmdDistribute(c *cli.Context) (err error) {
 			GroupThreshold: gthreshold,
 			DataThreshold:  dthreshold,
 		},
-		Log: log,
+		Log:      log,
+		Compress: !c.Bool("no-compress"),
 	})
 
 }
@@ -153,7 +162,32 @@ func cmdDistribute(opt *distributeOpt) (err error) {
 
 				g := s.GroupKey().Text(16)
 				d := s.DataKey().Text(16)
-				return ioutil.WriteFile(fmt.Sprintf("%s.%s.%s.json", base, g, d), data, 0644)
+				if opt.Compress {
+					fp, err := os.OpenFile(fmt.Sprintf(xzFileName, base, g, d), os.O_WRONLY|os.O_CREATE, 0644)
+					if err != nil {
+						return err
+					}
+					defer fp.Close()
+
+					w, err := xz.NewWriter(fp)
+					if err != nil {
+						return err
+					}
+					defer w.Close()
+
+					for {
+						n, err := w.Write(data)
+						if err != nil {
+							return err
+						}
+						if n == len(data) {
+							break
+						}
+						data = data[n:]
+					}
+					return nil
+				}
+				return ioutil.WriteFile(fmt.Sprintf(jsonFileName, base, g, d), data, 0644)
 
 			})
 		}(s)

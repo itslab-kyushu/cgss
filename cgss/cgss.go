@@ -78,6 +78,7 @@ func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt, status i
 	// Configure logging.
 	bar := pb.New(nchunk)
 	bar.Output = status
+	bar.Prefix("Chunk")
 	bar.Start()
 	defer bar.Finish()
 
