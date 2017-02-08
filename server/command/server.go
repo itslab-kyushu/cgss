@@ -28,6 +28,7 @@ import (
 	"path/filepath"
 
 	proto "github.com/golang/protobuf/proto"
+	"github.com/ulikunitz/xz"
 	context "golang.org/x/net/context"
 
 	"github.com/itslab-kyushu/cgss/kvs"
@@ -37,6 +38,8 @@ import (
 type Server struct {
 	// Root is a path to the document root.
 	Root string
+	// Compress stored data.
+	Compress bool
 }
 
 // Get returns a value associated with the given key.
@@ -50,9 +53,28 @@ func (s *Server) Get(ctx context.Context, key *kvs.Key) (res *kvs.Value, err err
 		return nil, fmt.Errorf("The given key is a bucket name")
 	}
 
-	data, err := ioutil.ReadFile(target)
-	if err != nil {
-		return
+	var data []byte
+	if s.Compress {
+		fp, err := os.Open(target)
+		if err != nil {
+			return err
+		}
+		defer fp.Close()
+
+		r, err := xz.NewReader(fp)
+		if err != nil {
+			return err
+		}
+		data, err = ioutil.ReadAll(r)
+		if err != nil {
+			return err
+		}
+
+	} else {
+		data, err = ioutil.ReadFile(target)
+		if err != nil {
+			return
+		}
 	}
 
 	res = &kvs.Value{}
@@ -76,6 +98,33 @@ func (s *Server) Put(ctx context.Context, entry *kvs.Entry) (*kvs.PutResponse, e
 	if err != nil {
 		return nil, err
 	}
+
+	if s.Compress {
+		fp, err := os.OpenFile(target, os.O_WRONLY|os.O_CREATE, 0644)
+		if err != nil {
+			return err
+		}
+		defer fp.Close()
+
+		w, err := xz.NewWriter(fp)
+		if err != nil {
+			return err
+		}
+		defer w.Close()
+
+		for {
+			n, err := w.Write(data)
+			if err != nil {
+				return err
+			}
+			if n == len(data) {
+				break
+			}
+			data = data[n:]
+		}
+		return nil
+	}
+
 	return &kvs.PutResponse{}, ioutil.WriteFile(target, data, 0644)
 
 }
