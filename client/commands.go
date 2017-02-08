@@ -26,6 +26,7 @@ import (
 	"os"
 
 	"github.com/itslab-kyushu/cgss/client/command/local"
+	"github.com/itslab-kyushu/cgss/client/command/remote"
 	"github.com/itslab-kyushu/cgss/client/command/simple"
 	"github.com/urfave/cli"
 )
@@ -40,6 +41,31 @@ var GlobalFlags = []cli.Flag{
 
 // Commands defines a set of commands.
 var Commands = cli.Commands{
+	{
+		Name:  "remote",
+		Usage: "Access remote CGSS servers",
+		Subcommands: cli.Commands{
+			{
+				Name:  "get",
+				Usage: "Download shares and reconstruct a file",
+			},
+			{
+				Name:  "put",
+				Usage: "Distribute and store shares",
+			},
+			{
+				Name:  "delete",
+				Usage: "Delete a file from all servers",
+			},
+			{
+				Name:        "list",
+				Usage:       "Get a list of files stored in servers",
+				Description: "Receive a list of files stored in a random server",
+				ArgsUsage:   "<config file>",
+				Action:      remote.CmdList,
+			},
+		},
+	},
 	{
 		Name:  "local",
 		Usage: "Run local file based CGSS scheme",
