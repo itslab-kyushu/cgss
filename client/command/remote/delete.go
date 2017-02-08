@@ -43,11 +43,11 @@ func CmdDelete(c *cli.Context) (err error) {
 		return cli.ShowSubcommandHelp(c)
 	}
 
-	conf, err := cfg.ReadConfig(c.Args().First())
+	conf, err := cfg.ReadConfig(c.String("config"))
 	if err != nil {
 		return
 	}
-	return cmdDelete(conf, c.Args().Get(1))
+	return cmdDelete(conf, c.Args().First())
 
 }
 

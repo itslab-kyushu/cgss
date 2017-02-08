@@ -54,17 +54,17 @@ func CmdPut(c *cli.Context) (err error) {
 	if c.NArg() != 4 {
 		return cli.ShowSubcommandHelp(c)
 	}
-	conf, err := cfg.ReadConfig(c.Args().First())
+	conf, err := cfg.ReadConfig(c.String("config"))
 	if err != nil {
 		return
 	}
 
-	gthreshold, err := strconv.Atoi(c.Args().Get(2))
+	gthreshold, err := strconv.Atoi(c.Args().Get(1))
 	if err != nil {
 		return
 	}
 
-	dthredhold, err := strconv.Atoi(c.Args().Get(3))
+	dthredhold, err := strconv.Atoi(c.Args().Get(2))
 	if err != nil {
 		return
 	}

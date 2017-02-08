@@ -54,7 +54,7 @@ func CmdGet(c *cli.Context) (err error) {
 		return cli.ShowSubcommandHelp(c)
 	}
 
-	conf, err := cfg.ReadConfig(c.Args().First())
+	conf, err := cfg.ReadConfig(c.String("config"))
 	if err != nil {
 		return
 	}
@@ -62,7 +62,7 @@ func CmdGet(c *cli.Context) (err error) {
 
 	output := c.String("output")
 	if output == "" {
-		output = c.Args().Get(1)
+		output = c.Args().First()
 	}
 
 	var log io.Writer
@@ -74,7 +74,7 @@ func CmdGet(c *cli.Context) (err error) {
 
 	return cmdGet(&getOpt{
 		Config:      conf,
-		Name:        c.Args().Get(1),
+		Name:        c.Args().First(),
 		OutputFile:  output,
 		NConnection: c.Int("max-connection"),
 		Log:         log,

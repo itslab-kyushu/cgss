@@ -42,7 +42,6 @@ var GlobalFlags = []cli.Flag{
 // Commands defines a set of commands.
 var Commands = cli.Commands{
 	{
-		// TODO: Set default config file name and support some flag to over write it.
 		Name:  "remote",
 		Usage: "Access remote CGSS servers",
 		Subcommands: cli.Commands{
@@ -50,9 +49,14 @@ var Commands = cli.Commands{
 				Name:        "get",
 				Usage:       "Download shares and reconstruct a file",
 				Description: "Download shares from a given set of servers and reconstruct original file.",
-				ArgsUsage:   "<config file> <file name>",
+				ArgsUsage:   "<file name>",
 				Action:      remote.CmdGet,
 				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "config",
+						Usage: "Server configuration `FILE`.",
+						Value: "cgss.yml",
+					},
 					cli.StringFlag{
 						Name:  "output",
 						Usage: "Store the reconstructed secret to the `FILE`.",
@@ -68,9 +72,14 @@ var Commands = cli.Commands{
 				Name:        "put",
 				Usage:       "Distribute and store shares",
 				Description: "Create shares of the given file and upload them to servers.",
-				ArgsUsage:   "<config file> <file> <group threshold> <data threshold>",
+				ArgsUsage:   "<file> <group threshold> <data threshold>",
 				Action:      remote.CmdPut,
 				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "config",
+						Usage: "Server configuration `FILE`.",
+						Value: "cgss.yml",
+					},
 					cli.IntFlag{
 						Name:  "chunk",
 						Usage: "Byte `size` of eash chunk.",
@@ -87,15 +96,29 @@ var Commands = cli.Commands{
 				Name:        "delete",
 				Usage:       "Delete a file from all servers",
 				Description: "Delete a file from all servers.",
-				ArgsUsage:   "<config file> <file name>",
+				ArgsUsage:   "<file name>",
 				Action:      remote.CmdDelete,
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "config",
+						Usage: "Server configuration `FILE`.",
+						Value: "cgss.yml",
+					},
+				},
 			},
 			{
 				Name:        "list",
 				Usage:       "Get a list of files stored in servers",
 				Description: "Receive a list of files stored in a random server.",
-				ArgsUsage:   "<config file>",
+				ArgsUsage:   "",
 				Action:      remote.CmdList,
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "config",
+						Usage: "Server configuration `FILE`.",
+						Value: "cgss.yml",
+					},
+				},
 			},
 		},
 	},
