@@ -88,7 +88,12 @@ func (s *Server) Get(ctx context.Context, key *kvs.Key) (res *kvs.Value, err err
 // Put stores a given entry as a file.
 func (s *Server) Put(ctx context.Context, entry *kvs.Entry) (*kvs.PutResponse, error) {
 
+	var err error
+
 	target := filepath.Join(s.Root, filepath.ToSlash(entry.Key.Name))
+	if err = os.MkdirAll(filepath.Dir(target), 0755); err != nil {
+		return nil, err
+	}
 	info, err := os.Stat(target)
 	if err == nil && info.IsDir() {
 		return nil, fmt.Errorf("The given key is used as a bucket name")
