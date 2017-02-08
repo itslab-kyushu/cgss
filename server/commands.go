@@ -40,6 +40,10 @@ var GlobalFlags = []cli.Flag{
 		Usage: "Document root `path`",
 		Value: "data",
 	},
+	cli.BoolFlag{
+		Name:  "no-compress",
+		Usage: "Store data files without compression",
+	},
 }
 
 // Commands defines a set of commands.

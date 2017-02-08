@@ -57,7 +57,8 @@ func CmdRun(c *cli.Context) (err error) {
 
 	s := grpc.NewServer()
 	kvs.RegisterKvsServer(s, &Server{
-		Root: root,
+		Root:     root,
+		Compress: !c.Bool("no-compress"),
 	})
 
 	fmt.Fprintln(os.Stderr, "Start listening.")

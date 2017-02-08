@@ -8,7 +8,7 @@ This software implements the Cross-Group Secret Sharing scheme proposed in [Cros
 ## Installation
 ```
 $ git clone https://github.com/itslab-kyushu/cgss
-$ cd cgss
+$ cd cgss/client
 $ go build
 ```
 
