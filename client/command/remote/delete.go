@@ -39,7 +39,7 @@ import (
 // CmdDelete prepares deleting a file and run cmdDelete.
 func CmdDelete(c *cli.Context) (err error) {
 
-	if c.NArg() != 2 {
+	if c.NArg() != 1 {
 		return cli.ShowSubcommandHelp(c)
 	}
 

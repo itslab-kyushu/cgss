@@ -37,7 +37,7 @@ import (
 // CmdList prepares list command and run cmdList.
 func CmdList(c *cli.Context) (err error) {
 
-	if c.NArg() != 1 {
+	if c.NArg() != 0 {
 		return cli.ShowSubcommandHelp(c)
 	}
 

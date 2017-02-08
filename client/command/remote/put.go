@@ -51,7 +51,7 @@ type putOpt struct {
 // CmdPut prepares put command and run cmdPut.
 func CmdPut(c *cli.Context) (err error) {
 
-	if c.NArg() != 4 {
+	if c.NArg() != 3 {
 		return cli.ShowSubcommandHelp(c)
 	}
 	conf, err := cfg.ReadConfig(c.String("config"))

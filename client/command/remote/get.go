@@ -50,7 +50,7 @@ type getOpt struct {
 // CmdGet prepares get command and run cmdGet.
 func CmdGet(c *cli.Context) (err error) {
 
-	if c.NArg() != 2 {
+	if c.NArg() != 1 {
 		return cli.ShowSubcommandHelp(c)
 	}
 
