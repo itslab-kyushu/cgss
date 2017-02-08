@@ -15,7 +15,7 @@ $ go build
 ## Usage
 ### Distribute
 ```
-$ cgss distribute <file> <group threshold> <data threshold> <allocation>
+$ cgss local distribute <file> <group threshold> <data threshold> <allocation>
 ```
 
 It produces share files.
@@ -28,7 +28,7 @@ and the j-th share for the i-th group has suffix `.i.j.json`.
 
 ### Reconstruct
 ```
-$ cgss reconstruct <file>...
+$ cgss local reconstruct <file>...
 ```
 
 It produces a file based on the given share's file name by removing the above
