@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"math/rand"
 
 	"google.golang.org/grpc"
@@ -12,7 +11,6 @@ import (
 	"github.com/itslab-kyushu/cgss/cfg"
 	"github.com/itslab-kyushu/cgss/kvs"
 	"github.com/urfave/cli"
-	yaml "gopkg.in/yaml.v2"
 )
 
 // CmdList prepares list command and run cmdList.
@@ -22,21 +20,17 @@ func CmdList(c *cli.Context) (err error) {
 		return cli.ShowSubcommandHelp(c)
 	}
 
-	data, err := ioutil.ReadFile(c.Args().First())
+	conf, err := cfg.ReadConfig(c.Args().First())
 	if err != nil {
 		return
 	}
-	var conf cfg.Config
-	if err = yaml.Unmarshal(data, &conf); err != nil {
-		return
-	}
-	return cmdList(&conf)
+	return cmdList(conf)
 
 }
 
 func cmdList(conf *cfg.Config) (err error) {
 
-	if len(conf.Groups) == 0 {
+	if conf.NGroups() == 0 {
 		return fmt.Errorf("No groups given: %v", conf)
 	}
 
