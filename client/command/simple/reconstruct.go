@@ -1,5 +1,5 @@
 //
-// command/simple/reconstruct.go
+// client/command/simple/reconstruct.go
 //
 // Copyright (c) 2017 Junpei Kawamoto
 //

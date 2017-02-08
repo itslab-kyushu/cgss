@@ -1,5 +1,5 @@
 //
-// main.go
+// server/version.go
 //
 // Copyright (c) 2017 Junpei Kawamoto
 //
@@ -21,35 +21,14 @@
 
 package main
 
-import (
-	"os"
-	"runtime"
+// Name defines the basename of this program.
+const Name string = "cgss-server"
 
-	"github.com/urfave/cli"
-)
+// Version defines current version number.
+const Version string = "0.1.0"
 
-func main() {
+// Author defines the author of this program.
+const Author string = "Junpei Kawamoto"
 
-	cpus := runtime.NumCPU()
-	runtime.GOMAXPROCS(cpus)
-
-	app := cli.NewApp()
-	app.Name = Name
-	app.Version = Version
-	app.Author = Author
-	app.Email = Email
-	app.Usage = "Distribute and reconstruct a secret file."
-	app.UsageText = "cgss command [command options] [arguments...]"
-
-	app.Flags = GlobalFlags
-	app.Commands = Commands
-	app.CommandNotFound = CommandNotFound
-
-	app.EnableBashCompletion = true
-	app.Copyright = `cgss  Copyright (C) 2017  Junpei Kawamoto
-This program comes with ABSOLUTELY NO WARRANTY.
-This is free software, and you are welcome to redistribute it
-under certain conditions.`
-
-	app.Run(os.Args)
-}
+// Email defines an email address of the author.
+const Email string = "kawamoto.junpei@gmail.com"

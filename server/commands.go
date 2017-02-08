@@ -1,5 +1,5 @@
 //
-// version.go
+// server/commands.go
 //
 // Copyright (c) 2017 Junpei Kawamoto
 //
@@ -21,14 +21,32 @@
 
 package main
 
-// Name defines the basename of this program.
-const Name string = "cgss"
+import (
+	"fmt"
+	"os"
 
-// Version defines current version number.
-const Version string = "0.1.0"
+	"github.com/urfave/cli"
+)
 
-// Author defines the author of this program.
-const Author string = "Junpei Kawamoto"
+// GlobalFlags defines a set of global flags.
+var GlobalFlags = []cli.Flag{
+	cli.IntFlag{
+		Name:  "port",
+		Usage: "Listening `port` number",
+		Value: 13009,
+	},
+	cli.StringFlag{
+		Name:  "root",
+		Usage: "Document root `path`",
+		Value: "data",
+	},
+}
 
-// Email defines an email address of the author.
-const Email string = "kawamoto.junpei@gmail.com"
+// Commands defines a set of commands.
+var Commands = cli.Commands{}
+
+// CommandNotFound handles an error that the given command is not found.
+func CommandNotFound(c *cli.Context, command string) {
+	fmt.Fprintf(os.Stderr, "%s: '%s' is not a %s command. See '%s --help'.", c.App.Name, command, c.App.Name, c.App.Name)
+	os.Exit(2)
+}

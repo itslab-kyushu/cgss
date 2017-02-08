@@ -1,5 +1,5 @@
 //
-// command/simple/doc.go
+// client/command/local/doc.go
 //
 // Copyright (c) 2017 Junpei Kawamoto
 //
@@ -19,6 +19,6 @@
 // along with cgss.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-// Package simple implements distribute and reconstruct sub commands for
-// the simple command of cgss.
-package simple
+// Package local implements distribute and reconstruct sub commands for
+// local file based CGSS scheme.
+package local
