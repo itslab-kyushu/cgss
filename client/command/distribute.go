@@ -1,5 +1,5 @@
 //
-// command/distribute.go
+// client/command/distribute.go
 //
 // Copyright (c) 2017 Junpei Kawamoto
 //

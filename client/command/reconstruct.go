@@ -1,5 +1,5 @@
 //
-// command/simple/reconstruct.go
+// client/command/reconstruct.go
 //
 // Copyright (c) 2017 Junpei Kawamoto
 //
@@ -19,20 +19,26 @@
 // along with cgss.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-package simple
+package command
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
+	"io"
 	"io/ioutil"
+	"os"
 	"strings"
 
-	"github.com/itslab-kyushu/cgss/sss"
+	"github.com/itslab-kyushu/cgss/cgss"
+	"github.com/ulikunitz/xz"
 	"github.com/urfave/cli"
 )
 
 type reconstructOpt struct {
 	ShareFiles []string
 	OutputFile string
+	Log        io.Writer
 }
 
 // CmdReconstruct executes reconstruct command.
@@ -42,9 +48,17 @@ func CmdReconstruct(c *cli.Context) error {
 		return cli.ShowSubcommandHelp(c)
 	}
 
+	var log io.Writer
+	if c.GlobalBool("quiet") {
+		log = ioutil.Discard
+	} else {
+		log = os.Stderr
+	}
+
 	opt := &reconstructOpt{
 		ShareFiles: append([]string{c.Args().First()}, c.Args().Tail()...),
 		OutputFile: c.String("output"),
+		Log:        log,
 	}
 	if opt.OutputFile == "" {
 		opt.OutputFile = outputFile(opt.ShareFiles[0])
@@ -54,23 +68,42 @@ func CmdReconstruct(c *cli.Context) error {
 
 }
 
-func cmdReconstruct(opt *reconstructOpt) error {
+func cmdReconstruct(opt *reconstructOpt) (err error) {
 
-	shares := make([]sss.Share, len(opt.ShareFiles))
+	fmt.Fprintln(opt.Log, "Reading share files")
+	shares := make([]cgss.Share, len(opt.ShareFiles))
 	for i, f := range opt.ShareFiles {
 
-		data, err := ioutil.ReadFile(f)
-		if err != nil {
-			return err
-		}
+		var data []byte
+		if strings.HasSuffix(f, ".xz") {
+			fp, err := os.Open(f)
+			if err != nil {
+				return err
+			}
+			defer fp.Close()
 
+			r, err := xz.NewReader(fp)
+			if err != nil {
+				return err
+			}
+			data, err = ioutil.ReadAll(r)
+			if err != nil {
+				return err
+			}
+
+		} else {
+			data, err = ioutil.ReadFile(f)
+			if err != nil {
+				return err
+			}
+		}
 		if err = json.Unmarshal(data, &shares[i]); err != nil {
 			return err
 		}
-
 	}
 
-	secret, err := sss.Reconstruct(shares)
+	fmt.Fprintln(opt.Log, "Reconstructing the secret")
+	secret, err := cgss.Reconstruct(context.Background(), shares, opt.Log)
 	if err != nil {
 		return err
 	}
@@ -82,9 +115,9 @@ func cmdReconstruct(opt *reconstructOpt) error {
 func outputFile(sharename string) string {
 
 	components := strings.Split(sharename, ".")
-	if len(components) < 2 {
+	if len(components) < 3 {
 		return ""
 	}
-	return strings.Join(components[:len(components)-2], ".")
+	return strings.Join(components[:len(components)-3], ".")
 
 }

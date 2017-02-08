@@ -1,5 +1,5 @@
 //
-// main.go
+// client/main.go
 //
 // Copyright (c) 2017 Junpei Kawamoto
 //

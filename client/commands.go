@@ -1,5 +1,5 @@
 //
-// commands.go
+// client/commands.go
 //
 // Copyright (c) 2017 Junpei Kawamoto
 //
