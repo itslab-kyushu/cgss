@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# Generate a random file.
+#
+# Usage:
+#   rfile <size> <filename>
+#
+if [[ $# != 2 ]]; then
+  echo "usage: $0 size filename"
+  exit 1
+fi
+head -c $1 /dev/urandom > $2
