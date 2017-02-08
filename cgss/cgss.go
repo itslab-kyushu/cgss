@@ -176,6 +176,7 @@ func Reconstruct(ctx context.Context, shares []Share, status io.Writer) (res []b
 	// Configure logging.
 	bar := pb.New(nchunk)
 	bar.Output = status
+	bar.Prefix("Chunk")
 	bar.Start()
 	defer bar.Finish()
 

@@ -47,8 +47,22 @@ var Commands = cli.Commands{
 		Usage: "Access remote CGSS servers",
 		Subcommands: cli.Commands{
 			{
-				Name:  "get",
-				Usage: "Download shares and reconstruct a file",
+				Name:        "get",
+				Usage:       "Download shares and reconstruct a file",
+				Description: "Download shares from a given set of servers and reconstruct original file.",
+				ArgsUsage:   "<config file> <file name>",
+				Action:      remote.CmdGet,
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "output",
+						Usage: "Store the reconstructed secret to the `FILE`.",
+					},
+					cli.IntFlag{
+						Name:  "max-connection",
+						Usage: "Maximimum connections",
+						Value: 10,
+					},
+				},
 			},
 			{
 				Name:        "put",
