@@ -109,7 +109,7 @@ var Commands = cli.Commands{
 				Name:        "list",
 				Usage:       "Get a list of files stored in servers",
 				Description: "Receive a list of files stored in a random server.",
-				ArgsUsage:   "",
+				ArgsUsage:   " ",
 				Action:      remote.CmdList,
 				Flags: []cli.Flag{
 					cli.StringFlag{
