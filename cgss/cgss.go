@@ -74,12 +74,8 @@ func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt, status i
 		shares[i] = Share{
 			Field:       field,
 			GroupShares: make([]*big.Int, nchunk),
-			// GroupShare: make([]sss.Share, nchunk),
-			DataShare: sss.Share{
-				Field: field,
-				Key:   big.NewInt(int64(i + 1)),
-				Value: make([]*big.Int, nchunk),
-			},
+			DataKey:     big.NewInt(int64(i + 1)),
+			DataShares:  make([]*big.Int, nchunk),
 		}
 	}
 
@@ -148,7 +144,7 @@ func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt, status i
 				iter := opt.Allocation.Iterator()
 				for i := range shares {
 					key := big.NewInt(int64(i + 1))
-					shares[i].DataShare.Value[chunk] = polynomial.Call(key)
+					shares[i].DataShares[chunk] = polynomial.Call(key)
 					group, ok := iter.Next()
 					if !ok {
 						return fmt.Errorf("Allocation is not enough: %v", opt.Allocation)
@@ -199,8 +195,8 @@ func Reconstruct(ctx context.Context, shares []Share, status io.Writer) (res []b
 		err = fmt.Errorf("No shares are given")
 		return
 	}
-
-	nchunk := len(shares[0].DataShare.Value)
+	nchunk := len(shares[0].DataShares)
+	field := shares[0].Field
 
 	// Configure logging.
 	bar := pb.New(nchunk)
@@ -234,9 +230,8 @@ func Reconstruct(ctx context.Context, shares []Share, status io.Writer) (res []b
 				}
 
 				value := big.NewInt(0)
-				field := shares[0].DataShare.Field
 				for i, s := range shares {
-					value.Add(value, new(big.Int).Mul(s.DataShare.Value[chunk], beta(field, shares, i)))
+					value.Add(value, new(big.Int).Mul(s.DataShares[chunk], beta(field, shares, i)))
 				}
 				value.Mod(value, field.Prime)
 
@@ -298,8 +293,8 @@ func beta(field *sss.Field, shares []Share, t int) *big.Int {
 		if i == t {
 			continue
 		}
-		sub := new(big.Int).Mod(new(big.Int).Sub(s.DataKey(), shares[t].DataKey()), field.Prime)
-		v := new(big.Int).Mul(s.DataKey(), new(big.Int).ModInverse(sub, field.Prime))
+		sub := new(big.Int).Mod(new(big.Int).Sub(s.DataKey, shares[t].DataKey), field.Prime)
+		v := new(big.Int).Mul(s.DataKey, new(big.Int).ModInverse(sub, field.Prime))
 		res.Mul(res, v)
 		res.Mod(res, field.Prime)
 	}

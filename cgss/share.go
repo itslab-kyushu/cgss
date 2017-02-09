@@ -32,20 +32,6 @@ type Share struct {
 	Field       *sss.Field
 	GroupKey    *big.Int
 	GroupShares []*big.Int
-
-	// GroupShare []sss.Share
-	DataShare sss.Share
-}
-
-// // GroupKey returns the group key of the share.
-// func (s *Share) GroupKey() *big.Int {
-// 	if len(s.GroupShare) == 0 {
-// 		return nil
-// 	}
-// 	return s.GroupShare[0].Key
-// }
-
-// DataKey returns the data key of the share.
-func (s *Share) DataKey() *big.Int {
-	return s.DataShare.Key
+	DataKey     *big.Int
+	DataShares  []*big.Int
 }
