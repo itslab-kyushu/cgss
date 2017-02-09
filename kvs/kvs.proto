@@ -6,22 +6,13 @@ message Key{
   string name = 1;
 }
 
-// Field represents a finite field Z/pZ.
-message Field{
-  string prime = 1;
-}
-
-// Share represents a basic share in Shamir's secret sharing scheme.
-message Share{
-  string key = 1;
-  repeated string value = 2;
-  Field field = 3;
-}
-
 // Value represents a share in CGSS.
 message Value{
-    repeated Share group_share = 1;
-    Share data_share = 2;
+  string field = 1;
+  string group_key = 2;
+  repeated string group_shares = 3;
+  string data_key = 4;
+  repeated string data_shares = 5;
 }
 
 // Entry defines a pair of key and value as an entry in the KVS.
