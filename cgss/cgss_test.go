@@ -95,8 +95,8 @@ func TestMarshall(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	for i, v := range shares[0].GroupShare {
-		if !cmpShare(v, res.GroupShare[i]) {
+	for i, v := range shares[0].GroupShares {
+		if v.Cmp(res.GroupShares[i]) != 0 {
 			t.Error("Marshal/Unmarshal don't work as expected:", res)
 		}
 	}

@@ -44,6 +44,12 @@ type DistributeOpt struct {
 	DataThreshold  int
 }
 
+// kv defines a simple key-value pair of *big.Int.
+type kv struct {
+	Key   *big.Int
+	Value *big.Int
+}
+
 // Distribute computes shares having a given secret.
 func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt, status io.Writer) (shares []Share, err error) {
 
@@ -66,7 +72,9 @@ func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt, status i
 	shares = make([]Share, nshare)
 	for i := range shares {
 		shares[i] = Share{
-			GroupShare: make([]sss.Share, nchunk),
+			Field:       field,
+			GroupShares: make([]*big.Int, nchunk),
+			// GroupShare: make([]sss.Share, nchunk),
 			DataShare: sss.Share{
 				Field: field,
 				Key:   big.NewInt(int64(i + 1)),
@@ -127,7 +135,7 @@ func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt, status i
 				c := new(big.Int).Add(value, nu)
 
 				// Create shares for the reconstructor's secret.
-				rshares, err := sss.Distribute(nu.Bytes(), opt.ChunkSize, opt.Allocation.Size(), opt.GroupThreshold)
+				rshares, err := distribute(nu, field, opt.Allocation.Size(), opt.GroupThreshold)
 				if err != nil {
 					return
 				}
@@ -145,7 +153,11 @@ func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt, status i
 					if !ok {
 						return fmt.Errorf("Allocation is not enough: %v", opt.Allocation)
 					}
-					shares[i].GroupShare[chunk] = rshares[group]
+					// Set group shares.
+					if shares[i].GroupKey == nil {
+						shares[i].GroupKey = big.NewInt(int64(group + 1))
+					}
+					shares[i].GroupShares[chunk] = rshares[group]
 				}
 				return
 
@@ -156,6 +168,23 @@ func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt, status i
 	}
 
 	return shares, wg.Wait()
+
+}
+
+// distribute computes shares for a reconstructor's secret.
+func distribute(nu *big.Int, field *sss.Field, size, gthreshold int) (shares []*big.Int, err error) {
+
+	polynomial, err := sss.NewPolynomial(field, nu, gthreshold-1)
+	if err != nil {
+		return
+	}
+
+	shares = make([]*big.Int, size)
+	for i := range shares {
+		key := big.NewInt(int64(i + 1))
+		shares[i] = polynomial.Call(key)
+	}
+	return
 
 }
 
@@ -215,11 +244,8 @@ func Reconstruct(ctx context.Context, shares []Share, status io.Writer) (res []b
 				if err != nil {
 					return
 				}
-				nu, err := sss.Reconstruct(gshares)
-				if err != nil {
-					return
-				}
-				value.Sub(value, new(big.Int).SetBytes(nu))
+				nu := reconstruct(gshares, field)
+				value.Sub(value, nu)
 				value.Mod(value, field.Prime)
 				bytes[chunk] = value.Bytes()
 				return
@@ -239,8 +265,33 @@ func Reconstruct(ctx context.Context, shares []Share, status io.Writer) (res []b
 
 }
 
+// reconstruct computes a reconstructor's secret from a set of shares.
+func reconstruct(shares []*kv, field *sss.Field) *big.Int {
+
+	value := big.NewInt(0)
+	for i, s := range shares {
+
+		beta := big.NewInt(1)
+		for j, t := range shares {
+			if i == j {
+				continue
+			}
+			sub := new(big.Int).Mod(new(big.Int).Sub(t.Key, s.Key), field.Prime)
+			v := new(big.Int).Mul(t.Key, new(big.Int).ModInverse(sub, field.Prime))
+			beta.Mul(beta, v)
+			beta.Mod(beta, field.Prime)
+		}
+		value.Add(value, new(big.Int).Mul(s.Value, beta))
+
+	}
+
+	value.Mod(value, field.Prime)
+	return value
+
+}
+
 // beta computes the following value:
-//   \mul_{i<=u<=k, u!=t} \frac{u-th key}{(u-th key) - (t-th key)}
+//   \mul_{1<=u<=k, u!=t} \frac{u-th key}{(u-th key) - (t-th key)}
 func beta(field *sss.Field, shares []Share, t int) *big.Int {
 	res := big.NewInt(1)
 	for i, s := range shares {
@@ -256,18 +307,20 @@ func beta(field *sss.Field, shares []Share, t int) *big.Int {
 }
 
 // distinctGroupShares returns a set of distinct group shares.
-func distinctGroupShares(shares []Share, index int) (res []sss.Share, err error) {
-	res = []sss.Share{}
+func distinctGroupShares(shares []Share, index int) (res []*kv, err error) {
+	res = []*kv{}
 	set := map[string]struct{}{}
 	for _, s := range shares {
-		key := s.GroupKey()
-		if key == nil {
+		if s.GroupKey == nil {
 			return nil, fmt.Errorf("Group shares are broken")
 		}
-		id := key.Text(16)
+		id := s.GroupKey.Text(16)
 		if _, exist := set[id]; !exist {
 			set[id] = struct{}{}
-			res = append(res, s.GroupShare[index])
+			res = append(res, &kv{
+				Key:   s.GroupKey,
+				Value: s.GroupShares[index],
+			})
 		}
 	}
 	return

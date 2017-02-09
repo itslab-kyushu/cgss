@@ -28,32 +28,32 @@ import (
 	"github.com/itslab-kyushu/sss/sss"
 )
 
-func TestGroupKey(t *testing.T) {
-
-	var share Share
-	var res *big.Int
-
-	share = Share{}
-	if res = share.GroupKey(); res != nil {
-		t.Error("Empty share returns a wrong group key:", res)
-	}
-
-	key := big.NewInt(1234)
-	share = Share{
-		GroupShare: []sss.Share{
-			sss.Share{
-				Key: key,
-			},
-			sss.Share{
-				Key: big.NewInt(4567),
-			},
-		},
-	}
-	if res = share.GroupKey(); res.Cmp(key) != 0 {
-		t.Error("GroupKey returns a wrong group key:", res)
-	}
-
-}
+// func TestGroupKey(t *testing.T) {
+//
+// 	var share Share
+// 	var res *big.Int
+//
+// 	share = Share{}
+// 	if res = share.GroupKey(); res != nil {
+// 		t.Error("Empty share returns a wrong group key:", res)
+// 	}
+//
+// 	key := big.NewInt(1234)
+// 	share = Share{
+// 		GroupShare: []sss.Share{
+// 			sss.Share{
+// 				Key: key,
+// 			},
+// 			sss.Share{
+// 				Key: big.NewInt(4567),
+// 			},
+// 		},
+// 	}
+// 	if res = share.GroupKey(); res.Cmp(key) != 0 {
+// 		t.Error("GroupKey returns a wrong group key:", res)
+// 	}
+//
+// }
 
 func TestDataKey(t *testing.T) {
 
