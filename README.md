@@ -18,7 +18,7 @@ Build client command `cgss`:
 ```
 $ cd $GOPATH/src/itslab-kyushu/cgss/client
 $ go get -d -t -v .
-$ go build
+$ go build -o cgss
 ```
 
 Build server command `cgss-server`:
@@ -26,7 +26,7 @@ Build server command `cgss-server`:
 ```
 $ cd $GOPATH/src/itslab-kyushu/cgss/server
 $ go get -d -t -v .
-$ go build
+$ go build -o cgss-server
 ```
 
 To build both commands, [Go](https://golang.org/) > 1.7.4 is required.
