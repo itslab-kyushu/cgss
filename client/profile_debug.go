@@ -1,5 +1,6 @@
+// +build debug
 //
-// cgss/share.go
+// client/profile_debug.go
 //
 // Copyright (c) 2017 Junpei Kawamoto
 //
@@ -19,19 +20,27 @@
 // along with cgss.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-package cgss
+package main
 
 import (
-	"math/big"
-
-	"github.com/itslab-kyushu/sss/sss"
+	"os"
+	"runtime/pprof"
 )
 
-// Share defines a share of the Cross-Group Secret Sharing scheme.
-type Share struct {
-	Field       *sss.Field
-	GroupKey    *big.Int
-	GroupShares []*big.Int
-	DataKey     *big.Int
-	DataShares  []*big.Int
+// StartProfile starts profiling.
+func StartProfile() error {
+
+	cpuprofile := "client.prof"
+	f, err := os.Create(cpuprofile)
+	if err != nil {
+		return err
+	}
+	pprof.StartCPUProfile(f)
+	return nil
+
+}
+
+// StopProfile stops profiling.
+func StopProfile() {
+	pprof.StopCPUProfile()
 }

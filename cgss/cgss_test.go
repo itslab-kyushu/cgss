@@ -25,8 +25,6 @@ import (
 	"context"
 	"encoding/json"
 	"testing"
-
-	"github.com/itslab-kyushu/sss/sss"
 )
 
 func TestCGSS(t *testing.T) {
@@ -95,34 +93,16 @@ func TestMarshall(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	for i, v := range shares[0].GroupShare {
-		if !cmpShare(v, res.GroupShare[i]) {
+	for i, v := range shares[0].GroupShares {
+		if v.Cmp(res.GroupShares[i]) != 0 {
 			t.Error("Marshal/Unmarshal don't work as expected:", res)
 		}
 	}
 
-	if !cmpShare(shares[0].DataShare, res.DataShare) {
-		t.Error("Marshal/Unmarshal don't work as expected:", res)
-	}
-
-}
-
-func cmpShare(lhs, rhs sss.Share) bool {
-
-	if lhs.Field.Prime.Cmp(rhs.Field.Prime) != 0 {
-		return false
-	}
-	if lhs.Key.Cmp(rhs.Key) != 0 {
-		return false
-	}
-	if len(lhs.Value) != len(rhs.Value) {
-		return false
-	}
-	for i, v := range lhs.Value {
-		if v.Cmp(rhs.Value[i]) != 0 {
-			return false
+	for i, v := range shares[0].DataShares {
+		if v.Cmp(res.DataShares[i]) != 0 {
+			t.Error("Marshal/Unmarshal don't work as expected:", res)
 		}
 	}
-	return true
 
 }

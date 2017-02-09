@@ -144,7 +144,7 @@ func cmdPut(opt *putOpt) (err error) {
 						Key: &kvs.Key{
 							Name: opt.Filename,
 						},
-						Value: ToValue(shares[i]),
+						Value: ToValue(&shares[i]),
 					})
 					return
 

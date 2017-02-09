@@ -58,7 +58,6 @@ func CmdGet(c *cli.Context) (err error) {
 	if err != nil {
 		return
 	}
-	fmt.Println(conf)
 
 	output := c.String("output")
 	if output == "" {

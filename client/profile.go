@@ -1,5 +1,6 @@
+// +build !debug
 //
-// cgss/share.go
+// client/profile.go
 //
 // Copyright (c) 2017 Junpei Kawamoto
 //
@@ -19,19 +20,13 @@
 // along with cgss.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-package cgss
+package main
 
-import (
-	"math/big"
+// StartProfile starts profiling.
+func StartProfile() error {
+	return nil
+}
 
-	"github.com/itslab-kyushu/sss/sss"
-)
-
-// Share defines a share of the Cross-Group Secret Sharing scheme.
-type Share struct {
-	Field       *sss.Field
-	GroupKey    *big.Int
-	GroupShares []*big.Int
-	DataKey     *big.Int
-	DataShares  []*big.Int
+// StopProfile stops profiling.
+func StopProfile() {
 }
