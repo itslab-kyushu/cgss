@@ -61,7 +61,12 @@ func cmdList(conf *cfg.Config) (err error) {
 	}
 
 	server := group.Servers[rand.Intn(len(group.Servers))]
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", server.Address, server.Port), grpc.WithInsecure())
+	conn, err := grpc.Dial(
+		fmt.Sprintf("%s:%d", server.Address, server.Port),
+		grpc.WithInsecure(),
+		grpc.WithCompressor(grpc.NewGZIPCompressor()),
+		grpc.WithDecompressor(grpc.NewGZIPDecompressor()),
+	)
 	if err != nil {
 		return
 	}

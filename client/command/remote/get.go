@@ -115,7 +115,12 @@ func cmdGet(opt *getOpt) (err error) {
 					defer func() { <-semaphore }()
 					defer bar.Increment()
 
-					conn, err := grpc.Dial(fmt.Sprintf("%s:%d", server.Address, server.Port), grpc.WithInsecure())
+					conn, err := grpc.Dial(
+						fmt.Sprintf("%s:%d", server.Address, server.Port),
+						grpc.WithInsecure(),
+						grpc.WithCompressor(grpc.NewGZIPCompressor()),
+						grpc.WithDecompressor(grpc.NewGZIPDecompressor()),
+					)
 					if err != nil {
 						return
 					}
