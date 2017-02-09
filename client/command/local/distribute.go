@@ -160,8 +160,8 @@ func cmdDistribute(opt *distributeOpt) (err error) {
 					return
 				}
 
-				g := s.GroupKey().Text(16)
-				d := s.DataKey().Text(16)
+				g := s.GroupKey.Text(16)
+				d := s.DataKey.Text(16)
 				if opt.Compress {
 					fp, err := os.OpenFile(fmt.Sprintf(xzFileName, base, g, d), os.O_WRONLY|os.O_CREATE, 0644)
 					if err != nil {

@@ -26,7 +26,6 @@ import (
 	"testing"
 
 	"github.com/itslab-kyushu/cgss/cgss"
-	"github.com/itslab-kyushu/sss/sss"
 )
 
 func TestConvert(t *testing.T) {
@@ -52,38 +51,30 @@ func TestConvert(t *testing.T) {
 		t.Fatal("Distribute didn't make enough shares.")
 	}
 
-	v := ToValue(shares[0])
+	v := ToValue(&shares[0])
 	res, err := FromValue(v)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
-	if !cmpShare(res.DataShare, shares[0].DataShare) {
-		t.Error("DataShare is not same:", res.DataShare, shares[0].DataShare)
+
+	if shares[0].Field.Prime.Cmp(res.Field.Prime) != 0 {
+		t.Error("Field is not same:", shares[0].Field, res.Field)
 	}
-	for i, v := range res.GroupShare {
-		if !cmpShare(v, shares[0].GroupShare[i]) {
-			t.Error("GroupShare is not same:", v, shares[0].GroupShare[i])
+	if shares[0].GroupKey.Cmp(res.GroupKey) != 0 {
+		t.Error("GroupKey is not same:", shares[0].GroupKey, res.GroupKey)
+	}
+	for i, v := range shares[0].GroupShares {
+		if v.Cmp(res.GroupShares[i]) != 0 {
+			t.Error("GroupShares are not same:", shares[0].GroupShares, res.GroupShares)
 		}
 	}
-
-}
-
-func cmpShare(lhs, rhs sss.Share) bool {
-
-	if lhs.Field.Prime.Cmp(rhs.Field.Prime) != 0 {
-		return false
+	if shares[0].DataKey.Cmp(res.DataKey) != 0 {
+		t.Error("DataKey is not same:", shares[0].DataKey, res.DataKey)
 	}
-	if lhs.Key.Cmp(rhs.Key) != 0 {
-		return false
-	}
-	if len(lhs.Value) != len(rhs.Value) {
-		return false
-	}
-	for i, v := range lhs.Value {
-		if v.Cmp(rhs.Value[i]) != 0 {
-			return false
+	for i, v := range shares[0].DataShares {
+		if v.Cmp(res.DataShares[i]) != 0 {
+			t.Error("DataShares are not same:", shares[0].DataShares, res.DataShares)
 		}
 	}
-	return true
 
 }

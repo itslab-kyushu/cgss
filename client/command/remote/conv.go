@@ -31,40 +31,22 @@ import (
 )
 
 // ToValue converts a share to a value.
-func ToValue(share cgss.Share) *kvs.Value {
+func ToValue(share *cgss.Share) (value *kvs.Value) {
 
-	res := &kvs.Value{
-		GroupShare: make([]*kvs.Share, len(share.GroupShare)),
-		DataShare: &kvs.Share{
-			Key:   share.DataShare.Key.Text(16),
-			Value: make([]string, len(share.DataShare.Value)),
-			Field: &kvs.Field{
-				Prime: share.DataShare.Field.Prime.Text(16),
-			},
-		},
+	value = &kvs.Value{
+		Field:       share.Field.Prime.Text(16),
+		GroupKey:    share.GroupKey.Text(16),
+		GroupShares: make([]string, len(share.GroupShares)),
+		DataKey:     share.DataKey.Text(16),
+		DataShares:  make([]string, len(share.DataShares)),
 	}
-
-	for i, v := range share.DataShare.Value {
-		res.DataShare.Value[i] = v.Text(16)
+	for i, v := range share.GroupShares {
+		value.GroupShares[i] = v.Text(16)
 	}
-
-	for i, g := range share.GroupShare {
-
-		s := &kvs.Share{
-			Key:   g.Key.Text(16),
-			Value: make([]string, len(g.Value)),
-			Field: &kvs.Field{
-				Prime: g.Field.Prime.Text(16),
-			},
-		}
-		for j, v := range g.Value {
-			s.Value[j] = v.Text(16)
-		}
-		res.GroupShare[i] = s
-
+	for i, v := range share.DataShares {
+		value.DataShares[i] = v.Text(16)
 	}
-
-	return res
+	return
 
 }
 
@@ -72,54 +54,35 @@ func ToValue(share cgss.Share) *kvs.Value {
 func FromValue(value *kvs.Value) (*cgss.Share, error) {
 
 	var ok bool
-	dkey, ok := new(big.Int).SetString(value.DataShare.Key, 16)
+	field, ok := new(big.Int).SetString(value.Field, 16)
 	if !ok {
-		return nil, fmt.Errorf("Cannot convert the data share key: %v", value.DataShare.Key)
+		return nil, fmt.Errorf("Cannot convert the field: %v", value.Field)
 	}
-	dprime, ok := new(big.Int).SetString(value.DataShare.Field.Prime, 16)
+	gkey, ok := new(big.Int).SetString(value.GroupKey, 16)
 	if !ok {
-		return nil, fmt.Errorf("Cannot convert the prime of the data share: %v", value.DataShare.Field.Prime)
+		return nil, fmt.Errorf("Cannot convert the group key: %v", value.GroupKey)
+	}
+	dkey, ok := new(big.Int).SetString(value.DataKey, 16)
+	if !ok {
+		return nil, fmt.Errorf("Cannot convert the data key: %v", value.DataKey)
 	}
 
 	res := &cgss.Share{
-		GroupShare: make([]sss.Share, len(value.GroupShare)),
-		DataShare: sss.Share{
-			Key:   dkey,
-			Value: make([]*big.Int, len(value.DataShare.Value)),
-			Field: sss.NewField(dprime),
-		},
+		Field:       sss.NewField(field),
+		GroupKey:    gkey,
+		GroupShares: make([]*big.Int, len(value.GroupShares)),
+		DataKey:     dkey,
+		DataShares:  make([]*big.Int, len(value.DataShares)),
 	}
-
-	for i, v := range value.DataShare.Value {
-		if res.DataShare.Value[i], ok = new(big.Int).SetString(v, 16); !ok {
-			return nil, fmt.Errorf("Cannot convert a data share value: %v", v)
+	for i, v := range value.GroupShares {
+		if res.GroupShares[i], ok = new(big.Int).SetString(v, 16); !ok {
+			return nil, fmt.Errorf("Cannot convert a group share: %v", v)
 		}
 	}
-
-	for i, g := range value.GroupShare {
-
-		key, ok := new(big.Int).SetString(g.Key, 16)
-		if !ok {
-			return nil, fmt.Errorf("Cannot convert a group share key: %v", g.Key)
+	for i, v := range value.DataShares {
+		if res.DataShares[i], ok = new(big.Int).SetString(v, 16); !ok {
+			return nil, fmt.Errorf("Cannot convert a data share: %v", v)
 		}
-
-		prime, ok := new(big.Int).SetString(g.Field.Prime, 16)
-		if !ok {
-			return nil, fmt.Errorf("Cannot convert a prime number: %v", g.Field.Prime)
-		}
-		s := sss.Share{
-			Key:   key,
-			Value: make([]*big.Int, len(g.Value)),
-			Field: sss.NewField(prime),
-		}
-
-		for j, v := range g.Value {
-			if s.Value[j], ok = new(big.Int).SetString(v, 16); !ok {
-				return nil, fmt.Errorf("Cannot convert a value: %v", v)
-			}
-		}
-		res.GroupShare[i] = s
-
 	}
 
 	return res, nil

@@ -53,14 +53,8 @@ func TestServer(t *testing.T) {
 			Name: "test",
 		},
 		Value: &kvs.Value{
-			GroupShare: []*kvs.Share{
-				&kvs.Share{
-					Key: "group-key-1",
-				},
-			},
-			DataShare: &kvs.Share{
-				Key: "data-key",
-			},
+			GroupKey: "group-key-1",
+			DataKey:  "data-key",
 		},
 	}
 
@@ -76,7 +70,7 @@ func TestServer(t *testing.T) {
 	res, err := server.Get(ctx, entry.Key)
 	if err != nil {
 		t.Error(err.Error())
-	} else if len(res.GroupShare) != 1 || res.GroupShare[0].Key != "group-key-1" || res.DataShare.Key != "data-key" {
+	} else if res.GroupKey != "group-key-1" || res.DataKey != "data-key" {
 		t.Error("Get returns a wrong share:", res)
 	}
 

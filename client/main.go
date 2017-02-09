@@ -32,7 +32,7 @@ import (
 func main() {
 
 	if err := StartProfile(); err != nil {
-		fmt.Fprintln("Cannot start profiling:", err.Error())
+		fmt.Fprintln(os.Stderr, "Cannot start profiling:", err.Error())
 	}
 	defer StopProfile()
 
