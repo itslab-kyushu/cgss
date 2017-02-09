@@ -44,6 +44,11 @@ var GlobalFlags = []cli.Flag{
 		Name:  "no-compress",
 		Usage: "Store data files without compression",
 	},
+	cli.IntFlag{
+		Name:  "max-message-size",
+		Usage: "Maximum acceptable message `byte` size",
+		Value: 1024 * 1024 * 256,
+	},
 }
 
 // Commands defines a set of commands.

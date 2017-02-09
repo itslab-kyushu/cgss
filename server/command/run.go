@@ -55,7 +55,11 @@ func CmdRun(c *cli.Context) (err error) {
 	}
 	fmt.Fprintln(os.Stderr, "Document root is set to", root)
 
-	s := grpc.NewServer()
+	s := grpc.NewServer(
+		grpc.RPCCompressor(grpc.NewGZIPCompressor()),
+		grpc.RPCDecompressor(grpc.NewGZIPDecompressor()),
+		grpc.MaxMsgSize(c.Int("max-message-size")),
+	)
 	kvs.RegisterKvsServer(s, &Server{
 		Root:     root,
 		Compress: !c.Bool("no-compress"),
