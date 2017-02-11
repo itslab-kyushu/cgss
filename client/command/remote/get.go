@@ -28,11 +28,12 @@ import (
 	"io/ioutil"
 	"os"
 
+	pb "gopkg.in/cheggaaa/pb.v1"
+
 	"google.golang.org/grpc"
 
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cheggaaa/pb"
 	"github.com/itslab-kyushu/cgss/cfg"
 	"github.com/itslab-kyushu/cgss/cgss"
 	"github.com/itslab-kyushu/cgss/kvs"

@@ -31,7 +31,8 @@ import (
 	"math/big"
 	"runtime"
 
-	"github.com/cheggaaa/pb"
+	pb "gopkg.in/cheggaaa/pb.v1"
+
 	"github.com/itslab-kyushu/sss/sss"
 	"golang.org/x/sync/errgroup"
 )

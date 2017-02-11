@@ -27,9 +27,10 @@ import (
 	"os"
 	"runtime"
 
+	pb "gopkg.in/cheggaaa/pb.v1"
+
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cheggaaa/pb"
 	"github.com/itslab-kyushu/cgss/cfg"
 	"github.com/itslab-kyushu/cgss/kvs"
 	"github.com/urfave/cli"
