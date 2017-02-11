@@ -1,19 +1,22 @@
-# cgss
+# Cross-Group Secret Sharing
 [![GPLv3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/copyleft/gpl.html)
-
-Cross-Group Secret Sharing.
+[![Release](https://img.shields.io/badge/release-0.1.0-brightgreen.svg)](https://github.com/itslab-kyushu/cgss/releases/tag/v0.1.0)
 
 This software implements the Cross-Group Secret Sharing scheme proposed in
 [Cross-group Secret Sharing for Secure Cloud Storage Service](http://hdl.handle.net/2324/1563374).
 
 ## Installation
-Download the code base:
+Compiled binaries are available on
+[Github](https://github.com/itslab-kyushu/cgss/releases).
+
+You can also compile by yourself.
+First, you need to download the code base:
 
 ```
 $ git clone https://github.com/itslab-kyushu/cgss $GOPATH/src/itslab-kyushu/cgss
 ```
 
-Build client command `cgss`:
+Then, build client command `cgss`:
 
 ```
 $ cd $GOPATH/src/itslab-kyushu/cgss/client
@@ -21,7 +24,7 @@ $ go get -d -t -v .
 $ go build -o cgss
 ```
 
-Build server command `cgss-server`:
+and build server command `cgss-server`:
 
 ```
 $ cd $GOPATH/src/itslab-kyushu/cgss/server
