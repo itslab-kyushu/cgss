@@ -1,5 +1,5 @@
 #
-# Makefile
+# server/Makefile
 #
 # Copyright (c) 2017 Junpei Kawamoto
 #
@@ -19,20 +19,8 @@
 # along with cgss.  If not, see <http://www.gnu.org/licenses/>.
 #
 VERSION = snapshot
-SUBDIRS := client server
 default: build
-.PHONY: build release proto docker $(SUBDIRS)
 
-build: $(SUBDIRS)
-
-$(SUBDIRS):
-	$(MAKE) -C $@
-
-release:
-	ghr  -u jkawamoto  v$(VERSION) pkg/$(VERSION)
-
-proto:
-	protoc --go_out=plugins=grpc:. kvs/kvs.proto
-
-docker:
-	docker build -t cgss-server --build-arg VERSION=$(VERSION) .
+.PHONY: build
+build:
+	goxc -d=../pkg -pv=$(VERSION) -os="linux,darwin,windows,freebsd,openbsd" -n=cgss-server
