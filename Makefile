@@ -21,7 +21,7 @@
 VERSION = snapshot
 SUBDIRS := client server
 default: build
-.PHONY: build release proto docker $(SUBDIRS)
+.PHONY: build release test get-deps proto docker $(SUBDIRS)
 
 build: $(SUBDIRS)
 
@@ -30,6 +30,12 @@ $(SUBDIRS):
 
 release:
 	ghr  -u jkawamoto  v$(VERSION) pkg/$(VERSION)
+
+test: get-deps
+	go test -v ./...
+
+get-deps:
+	for dir in $(SUBDIRS); do $(MAKE) -C "$$dir" get-deps; done
 
 proto:
 	protoc --go_out=plugins=grpc:. kvs/kvs.proto

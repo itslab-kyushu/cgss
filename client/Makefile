@@ -19,8 +19,11 @@
 # along with cgss.  If not, see <http://www.gnu.org/licenses/>.
 #
 VERSION = snapshot
+.PHONY: build get-deps
 default: build
 
-.PHONY: build
-build:
+build: get-deps
 	goxc -d=../pkg -pv=$(VERSION) -os="linux,darwin,windows,freebsd,openbsd" -n=cgss
+
+get-deps:
+	go get -d -t -v .
