@@ -29,7 +29,7 @@ $(SUBDIRS):
 	$(MAKE) -C $@
 
 release:
-	ghr  -u jkawamoto  v$(VERSION) pkg/$(VERSION)
+	ghr -u itslab-kyushu v$(VERSION) pkg/$(VERSION)
 
 test: get-deps
 	go test -v ./...
