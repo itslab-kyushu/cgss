@@ -46,6 +46,7 @@ func TestServer(t *testing.T) {
 	ctx := context.Background()
 	server := &Server{
 		Root: root,
+		Log:  os.Stdout,
 	}
 
 	entry := &kvs.Entry{
@@ -95,7 +96,7 @@ func (s *mockListServer) Send(key *kvs.Key) error {
 }
 
 func (s *mockListServer) Context() context.Context {
-	return nil
+	return context.Background()
 }
 
 func (s *mockListServer) SendMsg(m interface{}) error {
@@ -145,6 +146,7 @@ func TestList(t *testing.T) {
 
 	server := Server{
 		Root: root,
+		Log:  os.Stdout,
 	}
 	mock := mockListServer{}
 	err = server.List(&kvs.ListRequest{}, &mock)
