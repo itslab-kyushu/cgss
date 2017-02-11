@@ -49,6 +49,10 @@ var GlobalFlags = []cli.Flag{
 		Usage: "Maximum acceptable message `byte` size",
 		Value: 1024 * 1024 * 256,
 	},
+	cli.BoolFlag{
+		Name:  "quiet",
+		Usage: "Omit printing logging information.",
+	},
 }
 
 // Commands defines a set of commands.

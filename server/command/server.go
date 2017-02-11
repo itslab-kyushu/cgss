@@ -23,9 +23,11 @@ package command
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"time"
 
 	proto "github.com/golang/protobuf/proto"
 	"github.com/ulikunitz/xz"
@@ -34,12 +36,17 @@ import (
 	"github.com/itslab-kyushu/cgss/kvs"
 )
 
+// DateFormat defines a format to output logging information.
+const DateFormat = "2006-01-02 15:04:05"
+
 // Server defines a KVS server.
 type Server struct {
 	// Root is a path to the document root.
 	Root string
 	// Compress stored data.
 	Compress bool
+	// Log is a writer to output logging information.
+	Log io.Writer
 }
 
 // Get returns a value associated with the given key.
@@ -82,7 +89,14 @@ func (s *Server) Get(ctx context.Context, key *kvs.Key) (res *kvs.Value, err err
 		return
 	}
 
-	return res, nil
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
+		fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "GET", key.Name)
+		return res, nil
+	}
+
 }
 
 // Put stores a given entry as a file.
@@ -130,51 +144,91 @@ func (s *Server) Put(ctx context.Context, entry *kvs.Entry) (*kvs.PutResponse, e
 		return &kvs.PutResponse{}, nil
 	}
 
-	return &kvs.PutResponse{}, ioutil.WriteFile(target, data, 0644)
-
-}
-
-// Delete deletes a given file.
-func (s *Server) Delete(ctx context.Context, key *kvs.Key) (*kvs.DeleteResponse, error) {
-
-	target := filepath.Join(s.Root, filepath.ToSlash(key.Name))
-	info, err := os.Stat(target)
-	if err != nil {
-		return nil, err
-	} else if info.IsDir() {
-		return nil, fmt.Errorf("Given key is not associated with any items")
-	}
-
-	// TODO: Delete empty directories.
 	select {
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	default:
-		return &kvs.DeleteResponse{}, os.Remove(target)
+		fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "PUT", entry.Key.Name)
+		return &kvs.PutResponse{}, ioutil.WriteFile(target, data, 0644)
 	}
+
+}
+
+// Delete deletes a given file.
+func (s *Server) Delete(ctx context.Context, key *kvs.Key) (res *kvs.DeleteResponse, err error) {
+
+	var info os.FileInfo
+	target := filepath.Join(s.Root, filepath.ToSlash(key.Name))
+	info, err = os.Stat(target)
+	if err != nil {
+		return
+	} else if info.IsDir() {
+		return nil, fmt.Errorf("Given key is not associated with any items")
+	}
+
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+
+	default:
+		fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "DELETE", target)
+		if err = os.Remove(target); err != nil {
+			return
+		}
+
+		dir := filepath.Dir(target)
+		for {
+			if dir == s.Root {
+				break
+			}
+
+			info, err = os.Stat(dir)
+			if err != nil {
+				return
+			}
+			if !info.IsDir() && info.Size() != 0 {
+				break
+			}
+			fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "DELETE", dir)
+			if err = os.Remove(dir); err != nil {
+				return
+			}
+			dir = filepath.Dir(dir)
+
+		}
+
+	}
+	return &kvs.DeleteResponse{}, err
 
 }
 
 // List lists up items stored in this KVS.
 func (s *Server) List(_ *kvs.ListRequest, server kvs.Kvs_ListServer) error {
 
+	fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "LIST")
+	ctx := server.Context()
 	return filepath.Walk(s.Root, func(path string, info os.FileInfo, err error) error {
 
 		if err != nil {
 			return err
 		}
 
-		if info.IsDir() {
-			return nil
-		}
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
 
-		item, err := filepath.Rel(s.Root, path)
-		if err != nil {
-			return err
+		default:
+			if info.IsDir() {
+				return nil
+			}
+			item, err := filepath.Rel(s.Root, path)
+			if err != nil {
+				return err
+			}
+			return server.Send(&kvs.Key{
+				Name: item,
+			})
 		}
-		return server.Send(&kvs.Key{
-			Name: item,
-		})
 
 	})
 

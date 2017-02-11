@@ -23,6 +23,8 @@ package command
 
 import (
 	"fmt"
+	"io"
+	"io/ioutil"
 	"net"
 	"os"
 	"path/filepath"
@@ -35,6 +37,13 @@ import (
 
 // CmdRun runs a simple KVS server.
 func CmdRun(c *cli.Context) (err error) {
+
+	var log io.Writer
+	if c.Bool("quiet") {
+		log = ioutil.Discard
+	} else {
+		log = os.Stderr
+	}
 
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%d", c.GlobalInt("port")))
 	if err != nil {
@@ -53,7 +62,7 @@ func CmdRun(c *cli.Context) (err error) {
 	} else if !info.IsDir() {
 		return fmt.Errorf("Given document root isn't a directory:", root)
 	}
-	fmt.Fprintln(os.Stderr, "Document root is set to", root)
+	fmt.Fprintln(log, "Document root is set to", root)
 
 	s := grpc.NewServer(
 		grpc.RPCCompressor(grpc.NewGZIPCompressor()),
@@ -63,9 +72,10 @@ func CmdRun(c *cli.Context) (err error) {
 	kvs.RegisterKvsServer(s, &Server{
 		Root:     root,
 		Compress: !c.Bool("no-compress"),
+		Log:      log,
 	})
 
-	fmt.Fprintln(os.Stderr, "Start listening.")
+	fmt.Fprintln(log, "Start listening.")
 	return s.Serve(listen)
 
 }

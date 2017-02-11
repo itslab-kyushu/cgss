@@ -1,5 +1,5 @@
 #
-# Makefile
+# Dockerfile
 #
 # Copyright (c) 2017 Junpei Kawamoto
 #
@@ -18,21 +18,19 @@
 # You should have received a copy of the GNU General Public License
 # along with cgss.  If not, see <http://www.gnu.org/licenses/>.
 #
-VERSION = snapshot
-SUBDIRS := client server
-default: build
-.PHONY: build release proto docker $(SUBDIRS)
 
-build: $(SUBDIRS)
+#
+# This dockerfile builds an image for cgss server.
+#
+FROM ubuntu:latest
+MAINTAINER Junpei Kawamoto <kawamoto.junpei@gmail.com>
 
-$(SUBDIRS):
-	$(MAKE) -C $@
+VOLUME /data
+WORKDIR /root
 
-release:
-	ghr  -u jkawamoto  v$(VERSION) pkg/$(VERSION)
+EXPOSE 13009
 
-proto:
-	protoc --go_out=plugins=grpc:. kvs/kvs.proto
+ARG VERSION
+ADD pkg/${VERSION}/cgss-server_linux_amd64.tar.gz /root/
 
-docker:
-	docker build -t cgss-server --build-arg VERSION=$(VERSION) .
+CMD ["./cgss-server_linux_amd64/cgss-server", "--root", "/data"]
