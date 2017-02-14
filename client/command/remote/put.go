@@ -127,7 +127,7 @@ func cmdPut(opt *putOpt) (err error) {
 			default:
 			}
 
-			func(server *cfg.Server, i int) {
+			func(server cfg.Server, i int) {
 
 				semaphore <- struct{}{}
 				wg.Go(func() (err error) {
@@ -156,7 +156,7 @@ func cmdPut(opt *putOpt) (err error) {
 
 				})
 
-			}(&server, i)
+			}(server, i)
 			i++
 
 		}

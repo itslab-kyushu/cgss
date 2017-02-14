@@ -52,40 +52,50 @@ type Server struct {
 // Get returns a value associated with the given key.
 func (s *Server) Get(ctx context.Context, key *kvs.Key) (res *kvs.Value, err error) {
 
+	fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "GET", key.Name)
+
 	target := filepath.Join(s.Root, filepath.ToSlash(key.Name))
 	info, err := os.Stat(target)
 	if err != nil {
+		fmt.Fprintln(s.Log, err.Error())
 		return
 	} else if info.IsDir() {
-		return nil, fmt.Errorf("The given key is a bucket name")
+		err = fmt.Errorf("The given key is a bucket name")
+		fmt.Fprintln(s.Log, err.Error())
+		return
 	}
 
 	var data []byte
 	if s.Compress {
 		fp, err := os.Open(target)
 		if err != nil {
+			fmt.Fprintln(s.Log, err.Error())
 			return nil, err
 		}
 		defer fp.Close()
 
 		r, err := xz.NewReader(fp)
 		if err != nil {
+			fmt.Fprintln(s.Log, err.Error())
 			return nil, err
 		}
 		data, err = ioutil.ReadAll(r)
 		if err != nil {
+			fmt.Fprintln(s.Log, err.Error())
 			return nil, err
 		}
 
 	} else {
 		data, err = ioutil.ReadFile(target)
 		if err != nil {
+			fmt.Fprintln(s.Log, err.Error())
 			return nil, err
 		}
 	}
 
 	res = &kvs.Value{}
 	if err = proto.Unmarshal(data, res); err != nil {
+		fmt.Fprintln(s.Log, err.Error())
 		return
 	}
 
@@ -93,7 +103,6 @@ func (s *Server) Get(ctx context.Context, key *kvs.Key) (res *kvs.Value, err err
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	default:
-		fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "GET", key.Name)
 		return res, nil
 	}
 
@@ -103,30 +112,37 @@ func (s *Server) Get(ctx context.Context, key *kvs.Key) (res *kvs.Value, err err
 func (s *Server) Put(ctx context.Context, entry *kvs.Entry) (*kvs.PutResponse, error) {
 
 	var err error
+	fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "PUT", entry.Key.Name)
 
 	target := filepath.Join(s.Root, filepath.ToSlash(entry.Key.Name))
 	if err = os.MkdirAll(filepath.Dir(target), 0755); err != nil {
+		fmt.Fprintln(s.Log, err.Error())
 		return nil, err
 	}
 	info, err := os.Stat(target)
 	if err == nil && info.IsDir() {
-		return nil, fmt.Errorf("The given key is used as a bucket name")
+		err = fmt.Errorf("The given key is used as a bucket name")
+		fmt.Fprintln(s.Log, err.Error())
+		return nil, err
 	}
 
 	data, err := proto.Marshal(entry.Value)
 	if err != nil {
+		fmt.Fprintln(s.Log, err.Error())
 		return nil, err
 	}
 
 	if s.Compress {
 		fp, err := os.OpenFile(target, os.O_WRONLY|os.O_CREATE, 0644)
 		if err != nil {
+			fmt.Fprintln(s.Log, err.Error())
 			return nil, err
 		}
 		defer fp.Close()
 
 		w, err := xz.NewWriter(fp)
 		if err != nil {
+			fmt.Fprintln(s.Log, err.Error())
 			return nil, err
 		}
 		defer w.Close()
@@ -134,6 +150,7 @@ func (s *Server) Put(ctx context.Context, entry *kvs.Entry) (*kvs.PutResponse, e
 		for {
 			n, err := w.Write(data)
 			if err != nil {
+				fmt.Fprintln(s.Log, err.Error())
 				return nil, err
 			}
 			if n == len(data) {
@@ -148,7 +165,6 @@ func (s *Server) Put(ctx context.Context, entry *kvs.Entry) (*kvs.PutResponse, e
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	default:
-		fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "PUT", entry.Key.Name)
 		return &kvs.PutResponse{}, ioutil.WriteFile(target, data, 0644)
 	}
 
@@ -161,9 +177,12 @@ func (s *Server) Delete(ctx context.Context, key *kvs.Key) (res *kvs.DeleteRespo
 	target := filepath.Join(s.Root, filepath.ToSlash(key.Name))
 	info, err = os.Stat(target)
 	if err != nil {
+		fmt.Fprintln(s.Log, err.Error())
 		return
 	} else if info.IsDir() {
-		return nil, fmt.Errorf("Given key is not associated with any items")
+		err = fmt.Errorf("Given key is not associated with any items")
+		fmt.Fprintln(s.Log, err.Error())
+		return
 	}
 
 	select {
@@ -173,6 +192,7 @@ func (s *Server) Delete(ctx context.Context, key *kvs.Key) (res *kvs.DeleteRespo
 	default:
 		fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "DELETE", target)
 		if err = os.Remove(target); err != nil {
+			fmt.Fprintln(s.Log, err.Error())
 			return
 		}
 
@@ -184,6 +204,7 @@ func (s *Server) Delete(ctx context.Context, key *kvs.Key) (res *kvs.DeleteRespo
 
 			info, err = os.Stat(dir)
 			if err != nil {
+				fmt.Fprintln(s.Log, err.Error())
 				return
 			}
 			if !info.IsDir() && info.Size() != 0 {
@@ -191,6 +212,7 @@ func (s *Server) Delete(ctx context.Context, key *kvs.Key) (res *kvs.DeleteRespo
 			}
 			fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "DELETE", dir)
 			if err = os.Remove(dir); err != nil {
+				fmt.Fprintln(s.Log, err.Error())
 				return
 			}
 			dir = filepath.Dir(dir)
@@ -210,6 +232,7 @@ func (s *Server) List(_ *kvs.ListRequest, server kvs.Kvs_ListServer) error {
 	return filepath.Walk(s.Root, func(path string, info os.FileInfo, err error) error {
 
 		if err != nil {
+			fmt.Fprintln(s.Log, err.Error())
 			return err
 		}
 
@@ -223,6 +246,7 @@ func (s *Server) List(_ *kvs.ListRequest, server kvs.Kvs_ListServer) error {
 			}
 			item, err := filepath.Rel(s.Root, path)
 			if err != nil {
+				fmt.Fprintln(s.Log, err.Error())
 				return err
 			}
 			return server.Send(&kvs.Key{
