@@ -52,6 +52,8 @@ type Server struct {
 // Get returns a value associated with the given key.
 func (s *Server) Get(ctx context.Context, key *kvs.Key) (res *kvs.Value, err error) {
 
+	fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "GET", key.Name)
+
 	target := filepath.Join(s.Root, filepath.ToSlash(key.Name))
 	info, err := os.Stat(target)
 	if err != nil {
@@ -93,7 +95,6 @@ func (s *Server) Get(ctx context.Context, key *kvs.Key) (res *kvs.Value, err err
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	default:
-		fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "GET", key.Name)
 		return res, nil
 	}
 
@@ -103,6 +104,7 @@ func (s *Server) Get(ctx context.Context, key *kvs.Key) (res *kvs.Value, err err
 func (s *Server) Put(ctx context.Context, entry *kvs.Entry) (*kvs.PutResponse, error) {
 
 	var err error
+	fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "PUT", entry.Key.Name)
 
 	target := filepath.Join(s.Root, filepath.ToSlash(entry.Key.Name))
 	if err = os.MkdirAll(filepath.Dir(target), 0755); err != nil {
@@ -148,7 +150,6 @@ func (s *Server) Put(ctx context.Context, entry *kvs.Entry) (*kvs.PutResponse, e
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	default:
-		fmt.Fprintln(s.Log, time.Now().Local().Format(DateFormat), "PUT", entry.Key.Name)
 		return &kvs.PutResponse{}, ioutil.WriteFile(target, data, 0644)
 	}
 
