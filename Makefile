@@ -41,4 +41,6 @@ proto:
 	protoc --go_out=plugins=grpc:. kvs/kvs.proto
 
 docker:
-	docker build -t cgss-server --build-arg VERSION=$(VERSION) .
+	cd server && GOOS=linux GOARCH=amd64 go build -o cgss-server
+	docker build -t itslabq/cgss -f dockerfile/Dockerfile .
+	rm server/cgss-server

@@ -22,6 +22,8 @@
 #
 # This dockerfile builds an image for cgss server.
 #
+# Before building this image, cgs-server must be built in server.
+#
 FROM ubuntu:latest
 MAINTAINER Junpei Kawamoto <kawamoto.junpei@gmail.com>
 
@@ -30,7 +32,6 @@ WORKDIR /root
 
 EXPOSE 13009
 
-ARG VERSION
-ADD pkg/${VERSION}/cgss-server_linux_amd64.tar.gz /root/
+ADD ./server/cgss-server /root/
 
-CMD ["./cgss-server_linux_amd64/cgss-server", "--root", "/data"]
+CMD ["/root/cgss-server", "--root", "/data"]
