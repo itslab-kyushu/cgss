@@ -30,8 +30,8 @@ dependencies:
 
 compile:
   override:
-    - docker build --rm=false -t itslabq/cgss -f dockerfile/Dockerfile .
     - cd server && go build -o cgss-server
+    - docker build --rm=false -t itslabq/cgss -f dockerfile/Dockerfile .
 
 test:
   override:
