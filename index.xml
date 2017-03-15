@@ -1,0 +1,745 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cross-group secret sharing scheme</title>
+    <link>https://itslab-kyushu.github.io/cgss/index.xml</link>
+    <description>Recent content on Cross-group secret sharing scheme</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 15 Mar 2017 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://itslab-kyushu.github.io/cgss/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Cross-group Secret Sharing Scheme</title>
+      <link>https://itslab-kyushu.github.io/cgss/</link>
+      <pubDate>Wed, 15 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://itslab-kyushu.github.io/cgss/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://www.gnu.org/copyleft/gpl.html&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/license-GPLv3-blue.svg&#34; alt=&#34;GPLv3&#34; /&gt;&lt;/a&gt;
+&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases/tag/v0.1.0&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/release-0.1.0-brightgreen.svg&#34; alt=&#34;Release&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;Cloud datastore services have been essential to access your data from anywhere.
+However, they still have risks of
+data leakage since each cloud service occasionally becomes a target from
+malicious attackers
+and data loss since hard-wares of each cloud service occasionally are broken.
+To solve this problem, we&amp;rsquo;ve introduced &lt;em&gt;cross-group secret sharing scheme&lt;/em&gt;,
+which distributes a secret into servers from several could providers so that
+the secret can be reconstructed even if some of servers are attacked or become
+out-of-service.&lt;/p&gt;
+
+&lt;p&gt;This software provides both a &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt;
+&lt;a href=&#34;https://godoc.org/github.com/itslab-kyushu/cgss/cgss&#34;&gt;library&lt;/a&gt; and
+command line tools implementing the cross-group secret sharing scheme.&lt;/p&gt;
+
+&lt;h2 id=&#34;contents&#34;&gt;Contents&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;To use the cross-group secret sharing from another go application,
+see the &lt;a href=&#34;api&#34;&gt;API Reference&lt;/a&gt; page.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;To compute shares and reconstruct a secret in a computer,
+see the &lt;a href=&#34;local&#34;&gt;local mode usage&lt;/a&gt; page.&lt;/li&gt;
+&lt;li&gt;To use a cross-group secret sharing based data storage service,
+see the &lt;a href=&#34;remote&#34;&gt;client usage&lt;/a&gt; and &lt;a href=&#34;server&#34;&gt;server usage&lt;/a&gt; pages.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;publications&#34;&gt;Publications&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://sun.ac.jp/prof/anada/&#34;&gt;Hiroaki Anada&lt;/a&gt;,
+&lt;a href=&#34;https://www.jkawamoto.info&#34;&gt;Junpei Kawamoto&lt;/a&gt;,
+Chenyutao Ke,
+&lt;a href=&#34;http://www.is.c.titech.ac.jp/~morozov/&#34;&gt;Kirill Morozov&lt;/a&gt;, and
+&lt;a href=&#34;http://itslab.inf.kyushu-u.ac.jp/~sakurai/&#34;&gt;Kouichi Sakurai&lt;/a&gt;,
+&amp;ldquo;Cross-Group Secret Sharing Scheme for Secure Usage of Cloud Storage over Different Providers and Regions,&amp;rdquo;
+&lt;a href=&#34;http://www.anrdoezrs.net/links/8186671/type/dlg/https://link.springer.com/journal/11227&#34;&gt;The Journal of Supercomputing&lt;/a&gt;. (to be published)&lt;/li&gt;
+&lt;li&gt;Chenyutao Ke,
+&lt;a href=&#34;http://sun.ac.jp/prof/anada/&#34;&gt;Hiroaki Anada&lt;/a&gt;,
+&lt;a href=&#34;https://www.jkawamoto.info&#34;&gt;Junpei Kawamoto&lt;/a&gt;,
+&lt;a href=&#34;http://www.is.c.titech.ac.jp/~morozov/&#34;&gt;Kirill Morozov&lt;/a&gt;, and
+&lt;a href=&#34;http://itslab.inf.kyushu-u.ac.jp/~sakurai/&#34;&gt;Kouichi Sakurai&lt;/a&gt;,
+&amp;ldquo;&lt;a href=&#34;http://hdl.handle.net/2324/1563374&#34;&gt;Cross-group Secret Sharing for Secure Cloud Storage Service&lt;/a&gt;,&amp;rdquo;
+Proc. of the Annual International Conference on Ubiquitous Information Management and Communication (IMCOM 2016),
+pp.63:1-63:8, Vietnam, Jan.4-6, 2016.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Please consider to site those papers if you will publish articles using this application.&lt;/p&gt;
+
+&lt;h2 id=&#34;license&#34;&gt;License&lt;/h2&gt;
+
+&lt;p&gt;This software is released under The GNU General Public License Version 3,
+see &lt;a href=&#34;./licenses/&#34;&gt;license&lt;/a&gt; for more detail.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Local mode</title>
+      <link>https://itslab-kyushu.github.io/cgss/local/</link>
+      <pubDate>Wed, 15 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://itslab-kyushu.github.io/cgss/local/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases/tag/v0.1.0&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/release-0.1.0-brightgreen.svg&#34; alt=&#34;Release&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;Local mode of the client application provides two commands, distribute and
+reconstruct.
+Distribute command reads a given file and computes &lt;em&gt;n&lt;/em&gt; shares over &lt;em&gt;m&lt;/em&gt; groups
+with a data threshold &lt;em&gt;k&lt;/em&gt; and a group threshold &lt;em&gt;l&lt;/em&gt;.
+It means totally &lt;em&gt;n&lt;/em&gt; shares will be made from a secret file,
+and you must have at least &lt;em&gt;k&lt;/em&gt; shares from at least &lt;em&gt;l&lt;/em&gt; different groups
+to reconstruct the secret.&lt;/p&gt;
+
+&lt;p&gt;Reconstruct command does the reconstruction process;
+i.e. it reads at least &lt;em&gt;k&lt;/em&gt; share files and reconstruct the secret file.&lt;/p&gt;
+
+&lt;h2 id=&#34;distribute-command&#34;&gt;Distribute command&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ cgss local distribute &amp;lt;file&amp;gt; &amp;lt;group threshold&amp;gt; &amp;lt;data threshold&amp;gt; &amp;lt;allocation&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This command reads a secret file &lt;code&gt;&amp;lt;file&amp;gt;&lt;/code&gt; and makes share files.
+Allocation takes a comma separated share assignment information.
+For example, you want to allocate two shares to the first group,
+three shares to the second one, and one share to the last group,
+the allocation value is &lt;code&gt;2,3,1&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The produced share files has the original filename as the prefix,
+and the j-th share for the i-th group has suffix &lt;code&gt;.i.j.xz&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This command also takes an optional flag &lt;code&gt;--chunk&lt;/code&gt; to specify the byte size of
+each chunk.
+The given secret file is divided to chunks based on this size and distributed
+in shares.&lt;/p&gt;
+
+&lt;h2 id=&#34;reconstruct-command&#34;&gt;Reconstruct command&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ cgss local reconstruct &amp;lt;file&amp;gt;...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This command reconstructs a secret from a list of share files.
+It produces a file based on the given share&amp;rsquo;s file name by removing the above
+suffix.
+For example, if the names of share files are &lt;code&gt;sample.txt.1.1.xz&lt;/code&gt;,
+&lt;code&gt;sample.txt.2.1.xz&lt;/code&gt;, &amp;hellip;, then the default file name of the reconstructed secret
+will be &lt;code&gt;sample.txt&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can use &lt;code&gt;--output&lt;/code&gt; flag to use another file name.&lt;/p&gt;
+
+&lt;h2 id=&#34;tutorial&#34;&gt;Tutorial&lt;/h2&gt;
+
+&lt;p&gt;Suppose &lt;code&gt;secret.dat&lt;/code&gt; is a secret file and distributing it allocations share to
+three groups so that each group has two shares with both group and data
+threshold are 3, the following commands creates totally six shares:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ cgss local distribute secret.dat 3 3 2,2,2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above command creates a set of secrets, &lt;code&gt;secret.dat.1.1.xz&lt;/code&gt;,
+&lt;code&gt;secret.dat.1.2.xz&lt;/code&gt;, &lt;code&gt;secret.dat.2.1.xz&lt;/code&gt;, &amp;hellip;, &lt;code&gt;secret.dat.3.2.xz&lt;/code&gt;.
+We can store each share file into a different storage in order to prevent
+information leakage, and now we can delete the secret file &lt;code&gt;secret.dat&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;To reconstruct the secret from shares, we must to collect at least 3 share
+files from each group. Suppose we have &lt;code&gt;secret.dat.1.1.xz&lt;/code&gt;, &lt;code&gt;secret.dat.2.1.xz&lt;/code&gt;,
+and &lt;code&gt;secret.dat.3.1.xz&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ cgss local reconstruct secret.dat.1.1.xz secret.dat.2.1.xz secret.dat.3.1.xz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above command reconstructs the secret and stores it as &lt;code&gt;secret.dat&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
+
+&lt;p&gt;If you&amp;rsquo;re a &lt;a href=&#34;http://brew.sh/&#34;&gt;Homebrew&lt;/a&gt; user,
+you can install the client application by&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ brew tap itslab-kyushu/cgss
+$ brew install cgss
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Compiled binaries for some platforms are available on
+&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases&#34;&gt;Github&lt;/a&gt;.
+To use these binaries, after downloading a binary to your environment,
+decompress and put it in a directory included in your $PATH.&lt;/p&gt;
+
+&lt;p&gt;You can also compile the client application by yourself.
+To compile it, you first download the code base:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ git clone https://github.com/itslab-kyushu/cgss $GOPATH/src/itslab-kyushu/cgss
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, build the client application &lt;code&gt;cgss&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ cd $GOPATH/src/itslab-kyushu/cgss/client
+$ go get -d -t -v .
+$ go build -o cgss
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To build the command, &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt; &amp;gt; 1.7.4 is required.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Remote mode</title>
+      <link>https://itslab-kyushu.github.io/cgss/remote/</link>
+      <pubDate>Wed, 15 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://itslab-kyushu.github.io/cgss/remote/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases/tag/v0.1.0&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/release-0.1.0-brightgreen.svg&#34; alt=&#34;Release&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;Remote mode of the client application provides an interface to a client/server
+style data storage service.
+This mode has four commands:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;get: download a set of shares and reconstruct a secret,&lt;/li&gt;
+&lt;li&gt;put: creates a set of shares from a secret and upload each share to each
+server,&lt;/li&gt;
+&lt;li&gt;delete: delete shares associated with a given secret file,&lt;/li&gt;
+&lt;li&gt;list: show names of secret files stored in the data storage service,&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;and all commands connect a set of &lt;a href=&#34;../server&#34;&gt;data storage servers&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To specify address information of those servers, all commands receives a
+configuration file in YAML.
+The configuration file has a root element &lt;code&gt;groups&lt;/code&gt;, which is a list of group
+information; a group information has &lt;code&gt;name&lt;/code&gt; and &lt;code&gt;servers&lt;/code&gt; elements.
+&lt;code&gt;name&lt;/code&gt; represents a name of the group and &lt;code&gt;servers&lt;/code&gt; takes a list of server
+information, which is an object consisting of two element &lt;code&gt;address&lt;/code&gt; and &lt;code&gt;port&lt;/code&gt;.
+The following example defines two groups; group1 has two servers and group2
+has one server:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;group:
+  - name: Group1
+    servers:
+    - address: 192.168.0.1
+      port: 13009
+    - address: 192.168.0.2
+      port: 13009
+  - name: Group2
+    servers:
+    - address: 192.168.1.1
+      port: 13009
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The default name of the configuration file is &lt;code&gt;cgss.yml&lt;/code&gt; but you can set another
+name via &lt;code&gt;--config&lt;/code&gt; flag.&lt;/p&gt;
+
+&lt;p&gt;The get command gathers shares from the servers defined the configuration file,
+and put command distributes shares to the servers.&lt;/p&gt;
+
+&lt;h2 id=&#34;get-command&#34;&gt;Get command&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;cgss remote get --config cgss.yml --output result.dat &amp;lt;file name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Get command gathers shares associated with the given file name from the servers
+defined in the configuration file, and then reconstructs and stores them as
+the given file name via &lt;code&gt;--output&lt;/code&gt; flag.&lt;/p&gt;
+
+&lt;p&gt;The number of servers defined in the configuration file must be greater then or
+equal to the threshold which is used to put the secret file.&lt;/p&gt;
+
+&lt;p&gt;This command downloads shares from the servers defined the configuration file,
+even if the number of necessary shares is smaller than the number of the servers
+defined in the configuration file.
+In other words, it is not good to use the same configuration file when you used
+in &lt;code&gt;put&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;p&gt;If &lt;code&gt;--config&lt;/code&gt; flag is omitted, &lt;code&gt;cgss.yml&lt;/code&gt; is used, and if &lt;code&gt;--output&lt;/code&gt; flag is
+omitted, &lt;code&gt;&amp;lt;file name&amp;gt;&lt;/code&gt; is used.&lt;/p&gt;
+
+&lt;p&gt;To find available file names, use list command.&lt;/p&gt;
+
+&lt;h2 id=&#34;put-command&#34;&gt;Put command&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;cgss remote put --config cgss.yml &amp;lt;file&amp;gt; &amp;lt;group threshold&amp;gt; &amp;lt;data threshold&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Put command reads the given file and runs distribute procedure to create shares.
+The number of total shares are as same as defined in the server configuration
+file.&lt;/p&gt;
+
+&lt;p&gt;If &lt;code&gt;--config&lt;/code&gt; flag is omitted, &lt;code&gt;cgss.yml&lt;/code&gt; is used.&lt;/p&gt;
+
+&lt;p&gt;Put command also takes &lt;code&gt;--chunk&lt;/code&gt; flag to set the byte size of each chunk.
+The default value is 256.
+The distribute procedure creates a finite filed Z/pZ, where p is a prime number
+which has chunk size + 1 bit length.&lt;/p&gt;
+
+&lt;h2 id=&#34;delete-command&#34;&gt;Delete command&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;cgss remote delete --config cgss.yml &amp;lt;file name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Delete command deletes all shares associated with the given file name from all
+servers defined in the configuration file.&lt;/p&gt;
+
+&lt;p&gt;If &lt;code&gt;--config&lt;/code&gt; flag is omitted, &lt;code&gt;cgss.yml&lt;/code&gt; is used.&lt;/p&gt;
+
+&lt;h2 id=&#34;list-command&#34;&gt;List command&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;cgss remote list --config cgss.yml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;List command shows all file names stored in the servers.
+If &lt;code&gt;--config&lt;/code&gt; flag is omitted, &lt;code&gt;cgss.yml&lt;/code&gt; is used.&lt;/p&gt;
+
+&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
+
+&lt;p&gt;If you&amp;rsquo;re a &lt;a href=&#34;http://brew.sh/&#34;&gt;Homebrew&lt;/a&gt; user,
+you can install the client application by&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ brew tap itslab-kyushu/cgss
+$ brew install cgss
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Compiled binaries for some platforms are available on
+&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases&#34;&gt;Github&lt;/a&gt;.
+To use these binaries, after downloading a binary to your environment, decompress and put it in a directory included in your $PATH.&lt;/p&gt;
+
+&lt;p&gt;You can also compile the client application by yourself.
+To compile it, you first download the code base:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ git clone https://github.com/itslab-kyushu/cgss $GOPATH/src/itslab-kyushu/cgss
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, build the client application &lt;code&gt;cgss&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ cd $GOPATH/src/itslab-kyushu/cgss/client
+$ go get -d -t -v .
+$ go build -o cgss
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To build the command, &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt; &amp;gt; 1.7.4 is required.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Server application</title>
+      <link>https://itslab-kyushu.github.io/cgss/server/</link>
+      <pubDate>Wed, 15 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://itslab-kyushu.github.io/cgss/server/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases/tag/v0.1.0&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/release-0.1.0-brightgreen.svg&#34; alt=&#34;Release&#34; /&gt;&lt;/a&gt;
+&lt;a href=&#34;https://hub.docker.com/r/itslabq/cgss/&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/dockerhub-itslabq%2Fcgss-blue.svg&#34; alt=&#34;Dockerhub&#34; /&gt;&lt;/a&gt;
+&lt;a href=&#34;https://microbadger.com/images/itslabq/cgss&#34;&gt;&lt;img src=&#34;https://images.microbadger.com/badges/image/itslabq/cgss.svg&#34; alt=&#34;MicroBadger&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;Server application provides a data storage service based on the threshold secret
+sharing scheme.
+The server application is based on &lt;a href=&#34;http://www.grpc.io/&#34;&gt;gRPC&lt;/a&gt;, and you can
+find the service definition in &lt;a href=&#34;https://github.com/itslab-kyushu/cgss/blob/master/kvs/kvs.proto&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.grpc.io/&#34;&gt;&lt;img src=&#34;../img/grpc.png&#34; alt=&#34;gRPC&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;usage&#34;&gt;Usage&lt;/h2&gt;
+
+&lt;p&gt;The server application takes three flags,&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--port&lt;/code&gt;: the port number the server will listen,&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--root&lt;/code&gt;: the document root path to store uploaded shares,&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--no-compress&lt;/code&gt;: if set, all shares will be stored without compression.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If those flags are omitted, default values are used.
+Thus, you can start a server by just run &lt;code&gt;cgss-server&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;docker-support&#34;&gt;Docker support&lt;/h2&gt;
+
+&lt;p&gt;A docker image to run the server, &lt;code&gt;itslabq/cgss&lt;/code&gt;, is also available.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.docker.com/&#34;&gt;&lt;img src=&#34;../img/small_h-trans.png&#34; alt=&#34;docker&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Containers based on this image expose port 13009 and store uploaded shares into
+&lt;code&gt;/data&lt;/code&gt;. The following command runs a container with mapping local port 13009
+and &lt;code&gt;$(pwd)/data&lt;/code&gt; to the container&amp;rsquo;s port 13009 and &lt;code&gt;/data&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ docker run -it -p 13009:13009 -v $(pwd)/data:/data itslabq/cgss
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
+
+&lt;p&gt;Compiled binaries of the server application &lt;code&gt;cgss-server&lt;/code&gt; are available on
+&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases&#34;&gt;Github&lt;/a&gt;.
+To use these binaries, after downloading a binary to your environment,
+decompress and put it in a directory included in your $PATH.&lt;/p&gt;
+
+&lt;p&gt;You can also compile by yourself.
+First, you need to download the code base:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ git clone https://github.com/itslab-kyushu/cgss $GOPATH/src/itslab-kyushu/cgss
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, build server command &lt;code&gt;cgss-server&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ cd $GOPATH/src/itslab-kyushu/cgss/server
+$ go get -d -t -v .
+$ go build -o cgss-server
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To build it, &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt; &amp;gt; 1.7.4 is required.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>API Reference</title>
+      <link>https://itslab-kyushu.github.io/cgss/api/</link>
+      <pubDate>Wed, 15 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://itslab-kyushu.github.io/cgss/api/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://godoc.org/github.com/itslab-kyushu/cgss/cgss&#34;&gt;&lt;img src=&#34;https://godoc.org/github.com/itslab-kyushu/cgss/cgss?status.svg&#34; alt=&#34;GoDoc&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;Package &lt;code&gt;github.com/itslab-kyushu/cgss/cgss&lt;/code&gt; provides Distribute and Reconstruct
+functions, which creates a set of shares from a given secret and reconstruct
+the secret from a subset of the shares, respectively.&lt;/p&gt;
+
+&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go get -d github.com/itslab-kyushu/cgss
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;distribute-a-secret&#34;&gt;Distribute a secret&lt;/h2&gt;
+
+&lt;p&gt;In cross-group secret sharing scheme, shares are divided into groups,
+and you can choose how many shares are assigned in each group.
+We call the assignment as share &lt;em&gt;allocation&lt;/em&gt;.
+Type &lt;a href=&#34;https://godoc.org/github.com/itslab-kyushu/cgss/cgss#Allocation&#34;&gt;&lt;code&gt;Allocation&lt;/code&gt;&lt;/a&gt;,
+which is a list of integers, is used to define a share allocation.
+For example, &lt;code&gt;Allocation{3, 3, 2}&lt;/code&gt; means three shares are assigned to the first
+and second groups and two shares are assigned to the third group.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://godoc.org/github.com/itslab-kyushu/cgss/cgss#Distribute&#34;&gt;&lt;code&gt;Distribute&lt;/code&gt;&lt;/a&gt;
+function, which computes shares from a secret, takes an allocation,
+a group threshold, and a data threshold in addition to the secret.
+The group threshold &lt;em&gt;l&lt;/em&gt; constrains shares must be gathered from at least &lt;em&gt;l&lt;/em&gt;
+groups
+and the data threshold &lt;em&gt;k&lt;/em&gt; constrains at least &lt;em&gt;k&lt;/em&gt; share must be gathered
+in order to reconstruct the secret.&lt;/p&gt;
+
+&lt;p&gt;The Distribute function also takes chunk size parameter.
+Bigger secrets will be divided based on the size before they are distributed.
+Smaller chunk size may cause of overhead to handle fragments but
+bigger chunk size may cause of huge computation to find prime numbers used in
+the secret sharing process.
+We use 8 for all evaluations.&lt;/p&gt;
+
+&lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
+
+&lt;p&gt;The following example assumes three groups and assigns two shares to
+each of them, and the group and data thresholds are set to 2 and 3,
+respectively. It means, to reconstruct the secret, at least three shares must
+be collected from at least 2 groups.&lt;/p&gt;
+
+&lt;p&gt;Since the chunk size is set to 8bytes, the secret will be divided every
+8bytes and each chunk will be converted to a set of shares.&lt;/p&gt;
+
+&lt;p&gt;From the share assignment, the distribute function makes totally 6 shares,
+and it thus returns a slice of shares of which the length is 6.
+Note that the returned shares do not have any information about groups but
+the order of them are associated with the given allocation.
+More precisely, shares[0] and shares[1] are for the group 1, shares[2] and
+shares[3] are for the group 2, and shares[4] and shares[5] are for the
+group 3 in this example.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;secret := []byte(`abcdefgaerogih:weori:ih:opih:oeijhg@roeinv;dlkjh:
+	roihg:3pw9bdlnbmxznd:lah:orsihg:operinbk:sldfj:aporinb`)
+
+ctx := context.Background()
+shares, err := Distribute(ctx, secret, &amp;amp;DistributeOpt{
+	ChunkSize:      8,
+	Allocation:     Allocation{2, 2, 2},
+	GroupThreshold: 2,
+	DataThreshold:  3,
+}, nil)
+if err != nil {
+	log.Fatal(err.Error())
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;reconstruct-a-secret&#34;&gt;Reconstruct a secret&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://godoc.org/github.com/itslab-kyushu/cgss/cgss#Reconstruct&#34;&gt;&lt;code&gt;Reconstruct&lt;/code&gt;&lt;/a&gt;
+function takes a set of shares and returns the secret in byte slice.
+The given shares must satisfy the group and data constraints set to
+distribute the secret.
+If the number of groups and/or the number of shares are not enough, the result
+will be a list of meaningless bytes.&lt;/p&gt;
+
+&lt;h3 id=&#34;example-1&#34;&gt;Example&lt;/h3&gt;
+
+&lt;p&gt;The following example reconstructs the secret from a subset of distributed
+shares made in the above example.
+Since the group threshold and data threshold are 2 and 3, respectively,
+we use two shares from group 1 and one share from group 2, i.e. three shares
+from two groups, to reconstruct the secret.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// Pick up two shares from group 1 and one share from group 2.
+subset := []Share{shares[0], shares[1], shares[2]}
+res, err := Reconstruct(ctx, subset, nil)
+if err != nil {
+  log.Fatal(err.Error())
+}
+fmt.Println(string(res))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;marshal-unmarshal-shares&#34;&gt;Marshal/Unmarshal shares&lt;/h2&gt;
+
+&lt;p&gt;All components of a share implement
+&lt;a href=&#34;https://golang.org/pkg/encoding/json/#Marshaler&#34;&gt;Marshaler&lt;/a&gt;
+interface so that it can be marshaled and unmarshaled to/from a JSON document.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// share is a share object.
+bytes, err := json.Marshal(share)
+if err != nil {
+  log.Fatal(err.Error())
+}
+
+var res Share
+if err = json.Unmarshal(bytes, &amp;amp;res); err != nil {
+  log.Error(err.Error())
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Licenses</title>
+      <link>https://itslab-kyushu.github.io/cgss/licenses/</link>
+      <pubDate>Thu, 09 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://itslab-kyushu.github.io/cgss/licenses/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://www.gnu.org/copyleft/gpl.html&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/license-GPLv3-blue.svg&#34; alt=&#34;GPLv3&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;cgss&#34;&gt;cgss&lt;/h2&gt;
+
+&lt;p&gt;This software is released under the GPLv3.&lt;/p&gt;
+
+&lt;p&gt;Copyright &amp;copy; 2017 Junpei Kawamoto&lt;/p&gt;
+
+&lt;p&gt;This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.&lt;/p&gt;
+
+&lt;p&gt;This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.&lt;/p&gt;
+
+&lt;p&gt;You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;a href=&#34;http://www.gnu.org/licenses/&#34;&gt;http://www.gnu.org/licenses/&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;notices-for-libraries&#34;&gt;Notices for libraries&lt;/h2&gt;
+
+&lt;p&gt;This software uses the following open source libraries.&lt;/p&gt;
+
+&lt;h3 id=&#34;cli-https-github-com-urfave-cli&#34;&gt;&lt;a href=&#34;https://github.com/urfave/cli&#34;&gt;cli&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;Copyright &amp;copy; 2016 Jeremy Saenz &amp;amp; Contributors&lt;/p&gt;
+
+&lt;p&gt;Licensed under the MIT License.&lt;/p&gt;
+
+&lt;p&gt;Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &amp;ldquo;Software&amp;rdquo;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:&lt;/p&gt;
+
+&lt;p&gt;The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.&lt;/p&gt;
+
+&lt;p&gt;THE SOFTWARE IS PROVIDED &amp;ldquo;AS IS&amp;rdquo;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.&lt;/p&gt;
+
+&lt;h2 id=&#34;go-support-for-protocol-buffers-https-github-com-golang-protobuf&#34;&gt;&lt;a href=&#34;https://github.com/golang/protobuf&#34;&gt;Go support for Protocol Buffers&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Copyright 2010 The Go Authors.  All rights reserved.
+&lt;a href=&#34;https://github.com/golang/protobuf&#34;&gt;https://github.com/golang/protobuf&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.&lt;/li&gt;
+&lt;li&gt;Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.&lt;/li&gt;
+&lt;li&gt;Neither the name of Google Inc. nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+&amp;ldquo;AS IS&amp;rdquo; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.&lt;/p&gt;
+
+&lt;h2 id=&#34;grpc-go-https-github-com-grpc-grpc-go&#34;&gt;&lt;a href=&#34;https://github.com/grpc/grpc-go&#34;&gt;gRPC-Go&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Copyright 2014, Google Inc.
+All rights reserved.&lt;/p&gt;
+
+&lt;p&gt;Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.&lt;/li&gt;
+&lt;li&gt;Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.&lt;/li&gt;
+&lt;li&gt;Neither the name of Google Inc. nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+&amp;ldquo;AS IS&amp;rdquo; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.&lt;/p&gt;
+
+&lt;h2 id=&#34;pb-https-github-com-cheggaaa-pb&#34;&gt;&lt;a href=&#34;https://github.com/cheggaaa/pb&#34;&gt;pb&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Copyright &amp;copy; 2012-2015, Sergey Cherepanov&lt;/p&gt;
+
+&lt;p&gt;All rights reserved.&lt;/p&gt;
+
+&lt;p&gt;Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.&lt;/li&gt;
+&lt;li&gt;Redistributions in binary form must reproduce the above copyright notice, this
+list of conditions and the following disclaimer in the documentation and/or
+other materials provided with the distribution.&lt;/li&gt;
+&lt;li&gt;Neither the name of the author nor the names of its contributors may be used
+to endorse or promote products derived from this software without specific
+prior written permission.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &amp;ldquo;AS IS&amp;rdquo; AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.&lt;/p&gt;
+
+&lt;h2 id=&#34;package-xz-https-github-com-ulikunitz-xz&#34;&gt;&lt;a href=&#34;https://github.com/ulikunitz/xz&#34;&gt;Package xz&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Copyright &amp;copy; 2014-2016  Ulrich Kunitz
+All rights reserved.&lt;/p&gt;
+
+&lt;p&gt;Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.&lt;/li&gt;
+&lt;li&gt;Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.&lt;/li&gt;
+&lt;li&gt;My name, Ulrich Kunitz, may not be used to endorse or promote products
+derived from this software without specific prior written permission.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &amp;ldquo;AS IS&amp;rdquo;
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.&lt;/p&gt;
+
+&lt;h2 id=&#34;sss-https-itslab-kyushu-github-io-sss&#34;&gt;&lt;a href=&#34;https://itslab-kyushu.github.io/sss/&#34;&gt;sss&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Copyright &amp;copy; 2017 Junpei Kawamoto&lt;/p&gt;
+
+&lt;p&gt;This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.&lt;/p&gt;
+
+&lt;p&gt;This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.&lt;/p&gt;
+
+&lt;p&gt;You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;a href=&#34;http://www.gnu.org/licenses/&#34;&gt;http://www.gnu.org/licenses/&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;yaml-support-for-the-go-language-https-github-com-go-yaml-yaml&#34;&gt;&lt;a href=&#34;https://github.com/go-yaml/yaml&#34;&gt;YAML support for the Go language&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Copyright 2011-2016 Canonical Ltd.&lt;/p&gt;
+
+&lt;p&gt;Licensed under the Apache License, Version 2.0 (the &amp;ldquo;License&amp;rdquo;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.apache.org/licenses/LICENSE-2.0&#34;&gt;http://www.apache.org/licenses/LICENSE-2.0&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &amp;ldquo;AS IS&amp;rdquo; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

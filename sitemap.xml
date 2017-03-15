@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://itslab-kyushu.github.io/cgss/</loc>
+    <lastmod>2017-03-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://itslab-kyushu.github.io/cgss/local/</loc>
+    <lastmod>2017-03-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://itslab-kyushu.github.io/cgss/remote/</loc>
+    <lastmod>2017-03-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://itslab-kyushu.github.io/cgss/server/</loc>
+    <lastmod>2017-03-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://itslab-kyushu.github.io/cgss/api/</loc>
+    <lastmod>2017-03-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://itslab-kyushu.github.io/cgss/licenses/</loc>
+    <lastmod>2017-03-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://itslab-kyushu.github.io/cgss/</loc>
+    <lastmod>2017-03-15T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+</urlset>
