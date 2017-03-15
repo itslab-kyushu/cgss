@@ -1,5 +1,6 @@
+#!/bin/bash
 #
-# circle.yml
+# docker-test.sh
 #
 # Copyright (c) 2017 Junpei Kawamoto
 #
@@ -18,29 +19,27 @@
 # You should have received a copy of the GNU General Public License
 # along with cgss.  If not, see <http://www.gnu.org/licenses/>.
 #
-machine:
-  services:
-    - docker
 
-dependencies:
-  override:
-    - mkdir -p ~/.go_project/src/github.com/${CIRCLE_PROJECT_USERNAME}
-    - ln -s ${HOME}/${CIRCLE_PROJECT_REPONAME} ${HOME}/.go_project/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
-    - make get-deps
+#
+# Run docker based client/server tests.
+#
+docker run -d --name cgss-server -p 13009:13009 itslabq/cgss
 
-compile:
-  override:
-    - docker build --rm=false -t itslabq/cgss -f dockerfile/Dockerfile .
-    - cd server && go build -o cgss-server
+cat << EOS > cgss.yml
+groups:
+  - name: Group1
+    servers:
+      - address: 127.0.0.1
+        port: 13009
+EOS
 
-test:
-  override:
-    - make test
-    - ./docker-test.sh
+cd client
+go build -o client
+cd ../
+./client/client remote put cgss.yml 1 1
+./client/client remote get cgss.yml --output cgss2.yml
 
-deployment:
-  hub:
-    branch: master
-    commands:
-      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - docker push itslabq/cgss
+docker kill cgss-server
+docker rm cgss-server
+
+[[ -z $(diff cgss.yml cgss2.yml && rm cgss.yml cgss2.yml) ]]
