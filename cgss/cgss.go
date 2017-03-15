@@ -39,10 +39,14 @@ import (
 
 // DistributeOpt defines arguments of Distribute function.
 type DistributeOpt struct {
-	ChunkSize      int
-	Allocation     Allocation
+	// Secrets will be divided into chunks based on the ChunkSize.
+	ChunkSize int
+	// Share assignment information.
+	Allocation Allocation
+	// Minimum number of groups from which shares must be collected to reconstruct secrets.
 	GroupThreshold int
-	DataThreshold  int
+	// Minimum number of shares required to reconstruct secrets.
+	DataThreshold int
 }
 
 // kv defines a simple key-value pair of *big.Int.
@@ -51,7 +55,9 @@ type kv struct {
 	Value *big.Int
 }
 
-// Distribute computes shares having a given secret.
+// Distribute computes cross-groupt secret sharing shares of the given secret
+// according to the given configuration, opt.
+// If status isn't nil, logging information will be written to the Writer.
 func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt, status io.Writer) (shares []Share, err error) {
 
 	if status == nil {
@@ -185,7 +191,12 @@ func distribute(nu *big.Int, field *sss.Field, size, gthreshold int) (shares []*
 
 }
 
-// Reconstruct computes the secret value from a set of shares.
+// Reconstruct computes the secret from a set of shares.
+// The given shares must satisfy the group and data constraints set to
+// distribute the secret. If the number of groups and/or the number of shares
+// are not enough, the result is undefined (maybe some random value).
+//
+// If status isn't nil, logging information will be written to the Writer.
 func Reconstruct(ctx context.Context, shares []Share, status io.Writer) (res []byte, err error) {
 
 	if status == nil {

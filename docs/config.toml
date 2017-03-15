@@ -1,0 +1,38 @@
+baseurl = "https://itslab-kyushu.github.io/cgss/"
+languageCode = "en-us"
+metadataformat = "yaml"
+title = "Cross-group secret sharing scheme"
+theme = "hugo-alabaster-theme"
+
+disqusShortname = ""
+googleAnalytics = "UA-89247555-1"
+
+[params]
+	name = "CGSS"
+	description = "Cross-group secret sharing scheme"
+
+	github_user   = "itslab-kyushu"
+	github_repo   = "cgss"
+	github_banner = true
+
+	addthis = "ra-585b3ef9cae64e1e"
+
+	custom_css = []
+	custom_js  = []
+
+	highlightjs = "css/highlight.css"
+	favicon = "favicon.ico"
+
+[params.sidebar]
+	logo = "favicon.ico"
+
+	github_button  = true
+	travis_button  = false
+	codecov_button = false
+	gratipay = "~jkawamoto"
+
+	show_relations = false
+
+[params.footer]
+	copyright = "[Junpei Kawamoto](https://github.com/jkawamoto/) | Icon by [Clipart Kid](http://www.clipartkid.com/)"
+	show_powered_by = true

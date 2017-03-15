@@ -12,13 +12,13 @@ Compiled binaries are available on
 You can also compile by yourself.
 First, you need to download the code base:
 
-```
+```sh
 $ git clone https://github.com/itslab-kyushu/cgss $GOPATH/src/itslab-kyushu/cgss
 ```
 
 Then, build client command `cgss`:
 
-```
+```sh
 $ cd $GOPATH/src/itslab-kyushu/cgss/client
 $ go get -d -t -v .
 $ go build -o cgss
@@ -26,7 +26,7 @@ $ go build -o cgss
 
 and build server command `cgss-server`:
 
-```
+```sh
 $ cd $GOPATH/src/itslab-kyushu/cgss/server
 $ go get -d -t -v .
 $ go build -o cgss-server
@@ -49,7 +49,7 @@ on the other hand, reconstruct command reads a set of shares and reconstructs
 the original file.
 
 #### Distribute
-```
+```sh
 $ cgss local distribute <file> <group threshold> <data threshold> <allocation>
 ```
 
@@ -62,7 +62,7 @@ The produced share files has the original filename as the prefix,
 and the j-th share for the i-th group has suffix `.i.j.json`.
 
 #### Reconstruct
-```
+```sh
 $ cgss local reconstruct <file>...
 ```
 
@@ -98,7 +98,7 @@ The default name of the configuration file is `cgss.yml` but you can set another
 name via `--config` flag.
 
 #### Get
-```
+```sh
 cgss remote get --config cgss.yml --output result.dat <file name>
 ```
 
@@ -116,7 +116,7 @@ equal to the group threshold and the data threshold, which are given when those
 shares were created.
 
 #### Put
-```
+```sh
 cgss remote put --config cgss.yml <file> <group threshold> <data threshold>
 ```
 
@@ -136,7 +136,7 @@ The distribute procedure creates a finite filed Z/pZ, where p is a prime number
 which has chunk size + 1 bit length.
 
 ### Delete
-```
+```sh
 cgss remote delete --config cgss.yml <file name>
 ```
 
@@ -146,7 +146,7 @@ servers defined in the configuration file.
 If `--config` flag is omitted, `cgss.yml` is used.
 
 ### List
-```
+```sh
 cgss remote list --config cgss.yml
 ```
 
@@ -165,6 +165,25 @@ It takes three flags,
 If those flags are omitted, default values are used.
 Thus, you can start a server by just run `cgss-server`.
 
+## Publications
+
+* [Hiroaki Anada](http://sun.ac.jp/prof/anada/),
+  [Junpei Kawamoto](https://www.jkawamoto.info),
+  Chenyutao Ke,
+  [Kirill Morozov](http://www.is.c.titech.ac.jp/~morozov/), and
+  [Kouichi Sakurai](http://itslab.inf.kyushu-u.ac.jp/~sakurai/),
+  "Cross-Group Secret Sharing Scheme for Secure Usage of Cloud Storage over Different Providers and Regions,"
+  [The Journal of Supercomputing](http://www.anrdoezrs.net/links/8186671/type/dlg/https://link.springer.com/journal/11227). (to be published)
+* Chenyutao Ke,
+  [Hiroaki Anada](http://sun.ac.jp/prof/anada/),
+  [Junpei Kawamoto](https://www.jkawamoto.info),
+  [Kirill Morozov](http://www.is.c.titech.ac.jp/~morozov/), and
+  [Kouichi Sakurai](http://itslab.inf.kyushu-u.ac.jp/~sakurai/),
+  "[Cross-group Secret Sharing for Secure Cloud Storage Service](http://hdl.handle.net/2324/1563374),"
+  Proc. of the Annual International Conference on Ubiquitous Information Management and Communication (IMCOM 2016),
+  pp.63:1-63:8, Vietnam, Jan.4-6, 2016.
+
+Please consider to site those papers if you will publish articles using this application.
 
 ## License
 This software is released under The GNU General Public License Version 3,
