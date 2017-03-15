@@ -164,7 +164,7 @@ func ExampleReconstruct() {
 
 	ctx := context.Background()
 	// Distribute step is as same as the example of Dictribute function.
-	secret := []byte("This is a secret information")
+	secret := []byte("This is secret information")
 	shares, err := Distribute(ctx, secret, &DistributeOpt{
 		ChunkSize:      8,
 		Allocation:     Allocation{2, 2, 2},
@@ -182,6 +182,6 @@ func ExampleReconstruct() {
 		log.Fatal(err.Error())
 	}
 	fmt.Println(string(res))
-	// Output: This is a secret information
+	// Output: This is secret information
 
 }
