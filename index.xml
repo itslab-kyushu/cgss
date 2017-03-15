@@ -18,6 +18,8 @@
       <description>
 
 &lt;p&gt;&lt;a href=&#34;https://www.gnu.org/copyleft/gpl.html&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/license-GPLv3-blue.svg&#34; alt=&#34;GPLv3&#34; /&gt;&lt;/a&gt;
+&lt;a href=&#34;https://circleci.com/gh/itslab-kyushu/cgss/tree/master&#34;&gt;&lt;img src=&#34;https://circleci.com/gh/itslab-kyushu/cgss/tree/master.svg?style=svg&#34; alt=&#34;CircleCI&#34; /&gt;&lt;/a&gt;
+&lt;a href=&#34;https://app.wercker.com/project/byKey/062e76e7dff821dec72d1751c55b3402&#34;&gt;&lt;img src=&#34;https://app.wercker.com/status/062e76e7dff821dec72d1751c55b3402/s/master&#34; alt=&#34;wercker status&#34; title=&#34;wercker status&#34; /&gt;&lt;/a&gt;
 &lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases/tag/v0.1.0&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/release-0.1.0-brightgreen.svg&#34; alt=&#34;Release&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
