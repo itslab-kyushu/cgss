@@ -1,6 +1,11 @@
 # Cross-Group Secret Sharing
 [![GPLv3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/copyleft/gpl.html)
+[![CircleCI](https://circleci.com/gh/itslab-kyushu/cgss/tree/master.svg?style=svg)](https://circleci.com/gh/itslab-kyushu/cgss/tree/master)
+[![wercker status](https://app.wercker.com/status/062e76e7dff821dec72d1751c55b3402/s/master "wercker status")](https://app.wercker.com/project/byKey/062e76e7dff821dec72d1751c55b3402)
 [![Release](https://img.shields.io/badge/release-0.1.0-brightgreen.svg)](https://github.com/itslab-kyushu/cgss/releases/tag/v0.1.0)
+[![Dockerhub](https://img.shields.io/badge/dockerhub-itslabq%2Fcgss-blue.svg)](https://hub.docker.com/r/itslabq/cgss/)
+[![MicroBadger](https://images.microbadger.com/badges/image/itslabq/cgss.svg)](https://microbadger.com/images/itslabq/cgss)
+[![GoDoc](https://godoc.org/github.com/itslab-kyushu/cgss/cgss?status.svg)](https://godoc.org/github.com/itslab-kyushu/cgss/cgss)
 
 This software implements the Cross-Group Secret Sharing scheme proposed in
 [Cross-group Secret Sharing for Secure Cloud Storage Service](http://hdl.handle.net/2324/1563374).
