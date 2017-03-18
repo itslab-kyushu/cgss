@@ -35,7 +35,7 @@ func TestAllocationSum(t *testing.T) {
 func TestIterator(t *testing.T) {
 
 	a := Allocation{1, 2, 3, 4, 5}
-	iter := a.Iterator()
+	iter := a.iterator()
 
 	var (
 		v  int

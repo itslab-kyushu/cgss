@@ -38,25 +38,25 @@ func (a Allocation) Size() int {
 }
 
 // Iterator returns an iterator of the assignment.
-func (a Allocation) Iterator() *Iterator {
+func (a Allocation) iterator() *iterator {
 	return newIterator(a)
 }
 
 // Iterator defines a set of private members for an iterator of an allocation.
-type Iterator struct {
+type iterator struct {
 	allocation Allocation
 	group      int
 	count      int
 }
 
-func newIterator(a Allocation) *Iterator {
-	return &Iterator{
+func newIterator(a Allocation) *iterator {
+	return &iterator{
 		allocation: a,
 	}
 }
 
 // Next returns a next group number.
-func (i *Iterator) Next() (int, bool) {
+func (i *iterator) Next() (int, bool) {
 
 	if i.group >= len(i.allocation) {
 		return 0, false

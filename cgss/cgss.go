@@ -148,7 +148,7 @@ func Distribute(ctx context.Context, secret []byte, opt *DistributeOpt, status i
 				if err != nil {
 					return
 				}
-				iter := opt.Allocation.Iterator()
+				iter := opt.Allocation.iterator()
 				for i := range shares {
 					key := big.NewInt(int64(i + 1))
 					shares[i].DataShares[chunk] = polynomial.Call(key)
