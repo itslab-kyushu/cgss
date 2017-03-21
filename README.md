@@ -178,7 +178,7 @@ Thus, you can start a server by just run `cgss-server`.
   [Kirill Morozov](http://www.is.c.titech.ac.jp/~morozov/), and
   [Kouichi Sakurai](http://itslab.inf.kyushu-u.ac.jp/~sakurai/),
   "[Cross-Group Secret Sharing Scheme for Secure Usage of Cloud Storage over Different Providers and Regions](http://www.anrdoezrs.net/links/8186671/type/dlg/https://link.springer.com/article/10.1007%2Fs11227-017-2009-7),"
-  [The Journal of Supercomputing](http://www.anrdoezrs.net/links/8186671/type/dlg/https://link.springer.com/journal/11227). (to be published)
+  [The Journal of Supercomputing](http://www.anrdoezrs.net/links/8186671/type/dlg/https://link.springer.com/journal/11227).
 * Chenyutao Ke,
   [Hiroaki Anada](http://sun.ac.jp/prof/anada/),
   [Junpei Kawamoto](https://www.jkawamoto.info),
