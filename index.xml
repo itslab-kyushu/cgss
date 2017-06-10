@@ -103,7 +103,7 @@ i.e. it reads at least &lt;em&gt;k&lt;/em&gt; share files and reconstruct the se
 
 &lt;h2 id=&#34;distribute-command&#34;&gt;Distribute command&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ cgss local distribute &amp;lt;file&amp;gt; &amp;lt;group threshold&amp;gt; &amp;lt;data threshold&amp;gt; &amp;lt;allocation&amp;gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ cgss local distribute &amp;lt;file&amp;gt; &amp;lt;group threshold&amp;gt; &amp;lt;data threshold&amp;gt; &amp;lt;allocation&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;This command reads a secret file &lt;code&gt;&amp;lt;file&amp;gt;&lt;/code&gt; and makes share files.
@@ -122,7 +122,7 @@ in shares.&lt;/p&gt;
 
 &lt;h2 id=&#34;reconstruct-command&#34;&gt;Reconstruct command&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ cgss local reconstruct &amp;lt;file&amp;gt;...
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ cgss local reconstruct &amp;lt;file&amp;gt;...
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;This command reconstructs a secret from a list of share files.
@@ -162,7 +162,7 @@ and &lt;code&gt;secret.dat.3.1.xz&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;If you&amp;rsquo;re a &lt;a href=&#34;http://brew.sh/&#34;&gt;Homebrew&lt;/a&gt; user,
 you can install the client application by&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ brew tap itslab-kyushu/cgss
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ brew tap itslab-kyushu/cgss
 $ brew install cgss
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -244,7 +244,7 @@ and put command distributes shares to the servers.&lt;/p&gt;
 
 &lt;h2 id=&#34;get-command&#34;&gt;Get command&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;cgss remote get --config cgss.yml --output result.dat &amp;lt;file name&amp;gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ cgss remote get --config cgss.yml --output result.dat &amp;lt;file name&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Get command gathers shares associated with the given file name from the servers
@@ -267,7 +267,7 @@ omitted, &lt;code&gt;&amp;lt;file name&amp;gt;&lt;/code&gt; is used.&lt;/p&gt;
 
 &lt;h2 id=&#34;put-command&#34;&gt;Put command&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;cgss remote put --config cgss.yml &amp;lt;file&amp;gt; &amp;lt;group threshold&amp;gt; &amp;lt;data threshold&amp;gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ cgss remote put --config cgss.yml &amp;lt;file&amp;gt; &amp;lt;group threshold&amp;gt; &amp;lt;data threshold&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Put command reads the given file and runs distribute procedure to create shares.
@@ -283,7 +283,7 @@ which has chunk size + 1 bit length.&lt;/p&gt;
 
 &lt;h2 id=&#34;delete-command&#34;&gt;Delete command&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;cgss remote delete --config cgss.yml &amp;lt;file name&amp;gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ cgss remote delete --config cgss.yml &amp;lt;file name&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Delete command deletes all shares associated with the given file name from all
@@ -293,7 +293,7 @@ servers defined in the configuration file.&lt;/p&gt;
 
 &lt;h2 id=&#34;list-command&#34;&gt;List command&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;cgss remote list --config cgss.yml
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ cgss remote list --config cgss.yml
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;List command shows all file names stored in the servers.
@@ -304,7 +304,7 @@ If &lt;code&gt;--config&lt;/code&gt; flag is omitted, &lt;code&gt;cgss.yml&lt;/c
 &lt;p&gt;If you&amp;rsquo;re a &lt;a href=&#34;http://brew.sh/&#34;&gt;Homebrew&lt;/a&gt; user,
 you can install the client application by&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ brew tap itslab-kyushu/cgss
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ brew tap itslab-kyushu/cgss
 $ brew install cgss
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -418,7 +418,7 @@ the secret from a subset of the shares, respectively.&lt;/p&gt;
 
 &lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go get -d github.com/itslab-kyushu/cgss
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ go get -d github.com/itslab-kyushu/cgss
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;distribute-a-secret&#34;&gt;Distribute a secret&lt;/h2&gt;
