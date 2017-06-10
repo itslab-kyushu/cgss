@@ -17,7 +17,7 @@ functions, which creates a set of shares from a given secret and reconstruct
 the secret from a subset of the shares, respectively.
 
 ## Installation
-```sh
+```shell
 $ go get -d github.com/itslab-kyushu/cgss
 ```
 
