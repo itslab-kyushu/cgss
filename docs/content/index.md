@@ -14,7 +14,7 @@ description: >-
 [![GPLv3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/copyleft/gpl.html)
 [![CircleCI](https://circleci.com/gh/itslab-kyushu/cgss/tree/master.svg?style=svg)](https://circleci.com/gh/itslab-kyushu/cgss/tree/master)
 [![wercker status](https://app.wercker.com/status/062e76e7dff821dec72d1751c55b3402/s/master "wercker status")](https://app.wercker.com/project/byKey/062e76e7dff821dec72d1751c55b3402)
-[![Release](https://img.shields.io/badge/release-0.1.0-brightgreen.svg)](https://github.com/itslab-kyushu/cgss/releases/tag/v0.1.0)
+[![Release](https://img.shields.io/badge/release-0.2.0-brightgreen.svg)](https://github.com/itslab-kyushu/cgss/releases/tag/v0.2.0)
 
 ## Summary
 Cloud datastore services have been essential to access your data from anywhere.

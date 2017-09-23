@@ -13,7 +13,7 @@ description: >-
   delete is deleting shares associated with a given secret file,
   list is showing names of secret files stored in the data storage service.
 ---
-[![Release](https://img.shields.io/badge/release-0.1.0-brightgreen.svg)](https://github.com/itslab-kyushu/cgss/releases/tag/v0.1.0)
+[![Release](https://img.shields.io/badge/release-0.2.0-brightgreen.svg)](https://github.com/itslab-kyushu/cgss/releases/tag/v0.2.0)
 
 ## Summary
 Remote mode of the client application provides an interface to a client/server
