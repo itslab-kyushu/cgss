@@ -20,7 +20,7 @@
 &lt;p&gt;&lt;a href=&#34;https://www.gnu.org/copyleft/gpl.html&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/license-GPLv3-blue.svg&#34; alt=&#34;GPLv3&#34; /&gt;&lt;/a&gt;
 &lt;a href=&#34;https://circleci.com/gh/itslab-kyushu/cgss/tree/master&#34;&gt;&lt;img src=&#34;https://circleci.com/gh/itslab-kyushu/cgss/tree/master.svg?style=svg&#34; alt=&#34;CircleCI&#34; /&gt;&lt;/a&gt;
 &lt;a href=&#34;https://app.wercker.com/project/byKey/062e76e7dff821dec72d1751c55b3402&#34;&gt;&lt;img src=&#34;https://app.wercker.com/status/062e76e7dff821dec72d1751c55b3402/s/master&#34; alt=&#34;wercker status&#34; title=&#34;wercker status&#34; /&gt;&lt;/a&gt;
-&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases/tag/v0.1.0&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/release-0.1.0-brightgreen.svg&#34; alt=&#34;Release&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases/tag/v0.2.0&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/release-0.2.0-brightgreen.svg&#34; alt=&#34;Release&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
 
@@ -58,7 +58,8 @@ Chenyutao Ke,
 &lt;a href=&#34;http://www.is.c.titech.ac.jp/~morozov/&#34;&gt;Kirill Morozov&lt;/a&gt;, and
 &lt;a href=&#34;http://itslab.inf.kyushu-u.ac.jp/~sakurai/&#34;&gt;Kouichi Sakurai&lt;/a&gt;,
 &amp;ldquo;&lt;a href=&#34;http://www.anrdoezrs.net/links/8186671/type/dlg/https://link.springer.com/article/10.1007%2Fs11227-017-2009-7&#34;&gt;Cross-Group Secret Sharing Scheme for Secure Usage of Cloud Storage over Different Providers and Regions&lt;/a&gt;,&amp;rdquo;
-&lt;a href=&#34;http://www.anrdoezrs.net/links/8186671/type/dlg/https://link.springer.com/journal/11227&#34;&gt;The Journal of Supercomputing&lt;/a&gt;.&lt;/li&gt;
+&lt;a href=&#34;http://www.anrdoezrs.net/links/8186671/type/dlg/https://link.springer.com/journal/11227&#34;&gt;The Journal of Supercomputing&lt;/a&gt;,
+73(10), pp.4275-4301, 2017&lt;/li&gt;
 &lt;li&gt;Chenyutao Ke,
 &lt;a href=&#34;http://sun.ac.jp/prof/anada/&#34;&gt;Hiroaki Anada&lt;/a&gt;,
 &lt;a href=&#34;https://www.jkawamoto.info&#34;&gt;Junpei Kawamoto&lt;/a&gt;,
@@ -86,7 +87,7 @@ see &lt;a href=&#34;./licenses/&#34;&gt;license&lt;/a&gt; for more detail.&lt;/p
       <guid>https://itslab-kyushu.github.io/cgss/local/</guid>
       <description>
 
-&lt;p&gt;&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases/tag/v0.1.0&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/release-0.1.0-brightgreen.svg&#34; alt=&#34;Release&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases/tag/v0.2.0&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/release-0.2.0-brightgreen.svg&#34; alt=&#34;Release&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
 
@@ -196,7 +197,7 @@ $ go build -o cgss
       <guid>https://itslab-kyushu.github.io/cgss/remote/</guid>
       <description>
 
-&lt;p&gt;&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases/tag/v0.1.0&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/release-0.1.0-brightgreen.svg&#34; alt=&#34;Release&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases/tag/v0.2.0&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/release-0.2.0-brightgreen.svg&#34; alt=&#34;Release&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
 
@@ -337,7 +338,7 @@ $ go build -o cgss
       <guid>https://itslab-kyushu.github.io/cgss/server/</guid>
       <description>
 
-&lt;p&gt;&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases/tag/v0.1.0&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/release-0.1.0-brightgreen.svg&#34; alt=&#34;Release&#34; /&gt;&lt;/a&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/itslab-kyushu/cgss/releases/tag/v0.2.0&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/release-0.2.0-brightgreen.svg&#34; alt=&#34;Release&#34; /&gt;&lt;/a&gt;
 &lt;a href=&#34;https://hub.docker.com/r/itslabq/cgss/&#34;&gt;&lt;img src=&#34;https://img.shields.io/badge/dockerhub-itslabq%2Fcgss-blue.svg&#34; alt=&#34;Dockerhub&#34; /&gt;&lt;/a&gt;
 &lt;a href=&#34;https://microbadger.com/images/itslabq/cgss&#34;&gt;&lt;img src=&#34;https://images.microbadger.com/badges/image/itslabq/cgss.svg&#34; alt=&#34;MicroBadger&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
 
