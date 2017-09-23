@@ -20,6 +20,7 @@
 #
 VERSION = snapshot
 SUBDIRS := client server
+GHRFLAGS =
 default: build
 .PHONY: build release test get-deps proto docker $(SUBDIRS)
 
@@ -29,7 +30,7 @@ $(SUBDIRS):
 	$(MAKE) -C $@
 
 release:
-	ghr -u itslab-kyushu v$(VERSION) pkg/$(VERSION)
+	ghr -u itslab-kyushu $(GHRFLAGS) v$(VERSION) pkg/$(VERSION)
 
 test: get-deps
 	go test -v ./...
