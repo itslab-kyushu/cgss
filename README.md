@@ -1,10 +1,8 @@
 # Cross-Group Secret Sharing
 [![GPLv3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/copyleft/gpl.html)
 [![CircleCI](https://circleci.com/gh/itslab-kyushu/cgss/tree/master.svg?style=svg)](https://circleci.com/gh/itslab-kyushu/cgss/tree/master)
-[![wercker status](https://app.wercker.com/status/062e76e7dff821dec72d1751c55b3402/s/master "wercker status")](https://app.wercker.com/project/byKey/062e76e7dff821dec72d1751c55b3402)
 [![Release](https://img.shields.io/badge/release-0.2.0-brightgreen.svg)](https://github.com/itslab-kyushu/cgss/releases/tag/v0.2.0)
 [![Dockerhub](https://img.shields.io/badge/dockerhub-itslabq%2Fcgss-blue.svg)](https://hub.docker.com/r/itslabq/cgss/)
-[![MicroBadger](https://images.microbadger.com/badges/image/itslabq/cgss.svg)](https://microbadger.com/images/itslabq/cgss)
 [![GoDoc](https://godoc.org/github.com/itslab-kyushu/cgss/cgss?status.svg)](https://godoc.org/github.com/itslab-kyushu/cgss/cgss)
 
 This software implements the Cross-Group Secret Sharing scheme proposed in
@@ -172,18 +170,18 @@ Thus, you can start a server by just run `cgss-server`.
 
 ## Publications
 
-* [Hiroaki Anada](http://sun.ac.jp/prof/anada/),
+* [Hiroaki Anada](https://sites.google.com/view/lab-hiroaki-anada/),
   [Junpei Kawamoto](https://www.jkawamoto.info),
   Chenyutao Ke,
-  [Kirill Morozov](http://www.is.c.titech.ac.jp/~morozov/), and
+  [Kirill Morozov](https://engineering.unt.edu/people/kirill-morozov.html), and
   [Kouichi Sakurai](http://itslab.inf.kyushu-u.ac.jp/~sakurai/),
   "[Cross-Group Secret Sharing Scheme for Secure Usage of Cloud Storage over Different Providers and Regions](http://www.anrdoezrs.net/links/8186671/type/dlg/https://link.springer.com/article/10.1007%2Fs11227-017-2009-7),"
   [The Journal of Supercomputing](http://www.anrdoezrs.net/links/8186671/type/dlg/https://link.springer.com/journal/11227),
   73(10), pp.4275-4301, 2017.
 * Chenyutao Ke,
-  [Hiroaki Anada](http://sun.ac.jp/prof/anada/),
+  [Hiroaki Anada](https://sites.google.com/view/lab-hiroaki-anada/),
   [Junpei Kawamoto](https://www.jkawamoto.info),
-  [Kirill Morozov](http://www.is.c.titech.ac.jp/~morozov/), and
+  [Kirill Morozov](https://engineering.unt.edu/people/kirill-morozov.html), and
   [Kouichi Sakurai](http://itslab.inf.kyushu-u.ac.jp/~sakurai/),
   "[Cross-group Secret Sharing for Secure Cloud Storage Service](http://hdl.handle.net/2324/1563374),"
   Proc. of the Annual International Conference on Ubiquitous Information Management and Communication (IMCOM 2016),
